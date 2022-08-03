@@ -7,82 +7,94 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
-    <Grid>
-        <materialDesign:Card Padding="5"
-                              Margin="15"
-                              UniformCornerRadius="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <!--Heading-->
-                <TextBlock Grid.Row="0"
+    <materialDesign:Card 
+        Padding="15"
+        Margin="5"
+        UniformCornerRadius="5"
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch">
+        <Grid 
+            MinWidth="250">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--Heading-->
+            <TextBlock Grid.Row="0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            Text="Semester Information"
+                           FontSize="20"
                            FontFamily="{StaticResource OpenSansSemiBold}"/>
-                <!--Inputs-->
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Stretch"
-                                Margin="5"
-                                materialDesign:HintAssist.Hint="Start Date"
-                                FlowDirection="RightToLeft"
-                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
-                    
-                    <TextBox Grid.Column="1"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             Margin="5"
-                             AcceptsReturn="True"
-                             TextWrapping="NoWrap"
-                             materialDesign:HintAssist.Hint="Number of Weeks"/>
-                </Grid>
-
-                <!--Button-->
-            <Button Grid.Row="2"
-                    HorizontalAlignment="Right"
+            <!--Inputs-->
+            <Grid Grid.Row="1"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <DatePicker 
+                    Grid.Column="0"
                     VerticalAlignment="Center"
-                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:HintAssist.Hint="Start Date"
+                    FlowDirection="LeftToRight"
+                    Padding="10"
+                    Margin="0 5 5 5"
+                    Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
+
+                <TextBox 
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="10"
+                    Margin="5 5 0 5"
+                         materialDesign:HintAssist.Hint="Number of Weeks"/>
+            </Grid>
+
+            <!--Button-->
+            <Button
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Height="45"
+                Margin="0 5"
                     materialDesign:ButtonAssist.CornerRadius="5"
                     Background="{StaticResource ButtonBackgroundBrush}"
                     BorderBrush="{x:Null}">
-                    <Button.Content>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.Resources>
-                                <Style TargetType="materialDesign:PackIcon">
-                                    <Setter Property="Height"
-                                            Value="25"/>
-                                    <Setter Property="Width"
-                                            Value="25"/>
-                                </Style>
-                            </Grid.Resources>
-                            <TextBlock Text="Create"
-                                       Grid.Column="0"
-                                       Margin="10 0"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       FontFamily="{StaticResource MontserratMedium}"/>
-                            <materialDesign:PackIcon Kind="ChevronRightCircle"
-                                                     Grid.Column="1"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
-                        </Grid>
-                    </Button.Content>
+                <Button.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Setter Property="Height"
+                                                Value="25" />
+                                <Setter Property="Width"
+                                                Value="25" />
+                            </Style>
+                        </Grid.Resources>
+                        <materialDesign:PackIcon Kind="ChevronRightCircle"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Stretch"
+                                                         HorizontalAlignment="Center" />
+
+                        <TextBlock Text="Create Semester"
+                                           Grid.Column="0"
+                                           Margin="10 0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="{StaticResource MontserratMedium}"/>
+                    </Grid>
+                </Button.Content>
             </Button>
-            </Grid>
-        </materialDesign:Card>
-    </Grid>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>

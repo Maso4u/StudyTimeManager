@@ -6,30 +6,44 @@
              xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             FontFamily="{StaticResource MontserratRegular}">
-    <materialDesign:Card Padding="5"
+             FontFamily="{StaticResource MontserratRegular}"
+             MinWidth="250">
+    <materialDesign:Card Padding="15"
                               Margin="5"
                               UniformCornerRadius="5">
-        <StackPanel>
-            <TextBlock Grid.Column="0"
+        <Grid
+            Height="auto"
+            HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Text="Study Session"
                            FontFamily="{StaticResource OpenSansSemiBold}"
                            FontSize="20" />
-            <ComboBox Margin="10 15"
-                          Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                          materialDesign:HintAssist.Hint="Module"
-                          ItemsSource="{Binding Path=Modules}" />
-            <Grid>
+            <ComboBox 
+                Grid.Row="1"
+                Padding="10"
+                Margin="0 5"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                materialDesign:HintAssist.Hint="Module"
+                ItemsSource="{Binding Path=Modules}" />
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <DatePicker SelectedDate="{Binding Path=SelectedDate}"
+                <DatePicker 
+                    SelectedDate="{Binding Path=SelectedDate}"
                     Grid.Column="0"
                     MinWidth="120"
-                    Margin="10 5"
+                    Padding="10"
+                    Margin="0 5 5 5"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     materialDesign:HintAssist.Hint="Date"
@@ -42,7 +56,8 @@
                     Grid.Column="1"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     MinWidth="120"
-                    Margin="10 5"
+                    Padding="10"
+                    Margin="5 5 0 5"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
                     AcceptsReturn="True"
@@ -51,14 +66,14 @@
             </Grid>
 
             <Button
-                   Grid.Row="4"
-                   HorizontalAlignment="Stretch"
-                   VerticalAlignment="Center"
-                   Margin="5"
-                   Height="45"
-                   materialDesign:ButtonAssist.CornerRadius="5"
-                   Background="{StaticResource ButtonBackgroundBrush}"
-                   BorderBrush="{x:Null}">
+                Grid.Row="4"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Margin="0 5"
+                Height="45"
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                BorderBrush="{x:Null}">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -87,6 +102,6 @@
                     </Grid>
                 </Button.Content>
             </Button>
-        </StackPanel>
+        </Grid>
     </materialDesign:Card>
 </UserControl>

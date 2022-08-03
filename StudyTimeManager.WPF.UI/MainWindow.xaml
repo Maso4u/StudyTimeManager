@@ -6,10 +6,37 @@
         xmlns:local="clr-namespace:StudyTimeManager.WPF.UI"
         xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" MinHeight="550" MinWidth="1200"
+        FontFamily="{StaticResource MontserratRegular}">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
         <views:CreateSemesterView 
-            Height="200"
-            Width="350"/>
+            Grid.Row="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"/>
+            <views:CreateModuleView
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"/>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <views:CreateStudySession
+                Width="350"
+                HorizontalAlignment="Left"/>
+        </Grid>
     </Grid>
 </Window>

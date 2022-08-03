@@ -7,99 +7,106 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
-    <Grid>
-        <materialDesign:Card Padding="5"
-                              Margin="15"
-                              UniformCornerRadius="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <!--Heading-->
-                <TextBlock Grid.Row="0"
+    <materialDesign:Card Padding="15"
+                             Margin="5"
+                             UniformCornerRadius="5"
+                             HorizontalContentAlignment="Stretch"
+                             VerticalContentAlignment="Stretch">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <!--Heading-->
+            <TextBlock Grid.Row="0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
-                           Text="Semester Information"
+                           Text="Module Information"
+                           FontSize="20"
                            FontFamily="{StaticResource OpenSansSemiBold}"/>
-                <StackPanel Grid.Row="1">
-                    <TextBox
-                             Grid.Column="0"
+            <Grid Grid.Row="1"
+                  Height="auto"
+                  MinWidth="250"
+                  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBox
+                    Grid.Row="0"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="10"
+                    materialDesign:HintAssist.Hint="Code" />
+                <TextBox
+                             Grid.Row="1"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              VerticalAlignment="Center"
                              HorizontalAlignment="Stretch"
                              AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Margin="20 5"
-                             materialDesign:HintAssist.Hint="Code" />
-                    <TextBox
-                             Grid.Column="0"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Margin="20 5"
+                             TextWrapping="NoWrap"
+                             Padding="10"
                              materialDesign:HintAssist.Hint="Name" />
-                    <TextBox 
-                             Grid.Column="0"
+                <TextBox 
+                             Grid.Row="2"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              VerticalAlignment="Center"
                              HorizontalAlignment="Stretch"
                              AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Margin="20 5"
+                             TextWrapping="NoWrap"
+                             Padding="10"
                              materialDesign:HintAssist.Hint="Number of credits" />
-                    <TextBox
-                             Grid.Column="0"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Margin="20 5"
-                             materialDesign:HintAssist.Hint="Class hours per week" />
-                    <Button
-                        Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Margin="15 15"
-                        Height="50"
-                        materialDesign:ButtonAssist.CornerRadius="5"
-                        Background="{StaticResource ButtonBackgroundBrush}"
-                        BorderBrush="{x:Null}">
-                        <Button.Content>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="20*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.Resources>
-                                    <Style TargetType="materialDesign:PackIcon">
-                                        <Setter Property="Height"
+                <TextBox Grid.Row="3"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Stretch"
+                         AcceptsReturn="True"
+                         TextWrapping="NoWrap"
+                         Padding="10"
+                         materialDesign:HintAssist.Hint="Class hours per week" />
+                <Button
+                    Grid.Row="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Height="45"
+                    materialDesign:ButtonAssist.CornerRadius="5"
+                    Background="{StaticResource ButtonBackgroundBrush}"
+                    BorderBrush="{x:Null}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="20*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Setter Property="Height"
                                                 Value="25" />
-                                        <Setter Property="Width"
+                                    <Setter Property="Width"
                                                 Value="25" />
-                                    </Style>
-                                </Grid.Resources>
-                                <materialDesign:PackIcon Kind="PlusBoxMultiple"
+                                </Style>
+                            </Grid.Resources>
+                            <materialDesign:PackIcon Kind="PlusBoxMultiple"
                                                          Grid.Column="0"
                                                          VerticalAlignment="Stretch"
                                                          HorizontalAlignment="Center" />
 
-                                <TextBlock Text="Add Module"
+                            <TextBlock Text="Add Module"
                                            Grid.Column="1"
-                                           FontSize="20"
                                            Margin="10 0"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" 
                                            FontFamily="{StaticResource MontserratMedium}"/>
-                            </Grid>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
+                        </Grid>
+                    </Button.Content>
+                </Button>
             </Grid>
-        </materialDesign:Card>
-    </Grid>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>
