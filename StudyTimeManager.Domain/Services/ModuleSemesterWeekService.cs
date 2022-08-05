@@ -3,7 +3,7 @@ using StudyTimeManager.Domain.Services.Contracts;
 
 namespace StudyTimeManager.Domain.Services
 {
-    internal class ModuleSemesterWeekService : IModuleSemesterWeekService
+    public class ModuleSemesterWeekService : IModuleSemesterWeekService
     {
         private readonly Semester _semester;
 

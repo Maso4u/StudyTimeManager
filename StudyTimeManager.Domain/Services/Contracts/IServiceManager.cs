@@ -5,5 +5,6 @@
         IModuleService ModuleService { get; }
         IModuleSemesterWeekService ModuleSemesterWeekService { get; }
         IStudySessionService StudySessionService { get; }
+        ISemesterService SemesterService { get; }
     }
 }
