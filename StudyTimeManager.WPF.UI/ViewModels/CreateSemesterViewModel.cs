@@ -10,17 +10,15 @@ using CommunityToolkit.Mvvm.Messaging;
 using StudyTimeManager.WPF.UI.Messages;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
-public partial class CreateSemesterViewModel : ObservableRecipient
+public partial class CreateSemesterViewModel : ObservableValidator
 {
-    public MessageHandler<CreateModuleViewModel, SemesterCreatedMessage> SemesterCreated;
-
-    //[Required(ErrorMessage ="Semester start date is required")]
+    [Required(ErrorMessage ="Semester start date is required")]
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCreate))]
     private DateTime _startDate;
 
-    //[Required]
-    //[Range(1, int.MaxValue,ErrorMessage ="Number of weeks must be min. 1")]
+    [Required]
+    [Range(1, int.MaxValue,ErrorMessage ="Number of weeks must be min. 1")]
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCreate))]
     private int _numberOfWeeks;
@@ -35,12 +33,10 @@ public partial class CreateSemesterViewModel : ObservableRecipient
     public CreateSemesterViewModel(IServiceManager service, CreateModuleViewModel createModuleViewModel)
     {
         Semester semester = new Semester();
-        //startDate = DateOnly.FromDateTime(DateTime.NowDateTime.Now);
         _startDate = DateTime.Now;
         _service = service;
         _createModuleViewModel = createModuleViewModel;
 
-        //CreateSemesterCommand(CreateSemesterr);
         CreateSemesterCommand = new RelayCommand(CreateSemesterr);
 
         
