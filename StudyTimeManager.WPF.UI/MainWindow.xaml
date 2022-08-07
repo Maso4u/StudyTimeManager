@@ -3,14 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:StudyTimeManager.WPF.UI"
+        xmlns:local="clr-namespace:StudyTimeManager.WPF.UI" 
         xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="550" MinWidth="1200"
         FontFamily="{StaticResource MontserratRegular}">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0"
@@ -19,13 +20,14 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-        <views:CreateSemesterView 
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"/>
-            <views:CreateModuleView
-                Grid.Row="1"
+            <views:CreateSemesterView
+                DataContext="{Binding CreateSemesterViewModel}"
+                Grid.Row="0"
                 HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"/>
+            <views:CreateModuleView
+                DataContext="{Binding CreateModuleViewModel}"
+                Grid.Row="1"
                 VerticalAlignment="Stretch"/>
         </Grid>
 
@@ -35,8 +37,12 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <views:CreateStudySession
+                DataContext="{Binding CreateModuleStudySessionViewModel}"
                 Width="350"
                 HorizontalAlignment="Left"/>
+            <views:ModulesListingView
+                DataContext="{Binding ModulesListingViewModel}"
+                Grid.Row="1"/>
         </Grid>
     </Grid>
 </Window>

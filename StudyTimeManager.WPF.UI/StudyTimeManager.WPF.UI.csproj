@@ -8,11 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.2" />
+    <ProjectReference Include="..\StudyTimeManager.Domain\StudyTimeManager.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ValidationRules\" />
   </ItemGroup>
 
 </Project>

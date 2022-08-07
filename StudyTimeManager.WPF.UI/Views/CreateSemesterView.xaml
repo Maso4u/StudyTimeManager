@@ -20,7 +20,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!--Heading-->
+            <!--Title-->
             <TextBlock Grid.Row="0"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
@@ -36,6 +36,8 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <DatePicker 
+                    SelectedDate="{Binding Path=StartDate, UpdateSourceTrigger=PropertyChanged}"
+                    materialDesign:ValidationAssist.HasError="True"
                     Grid.Column="0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
@@ -46,6 +48,8 @@
                     Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
 
                 <TextBox 
+                    Text="{Binding Path=NumberOfWeeks, UpdateSourceTrigger=PropertyChanged}"
+                    materialDesign:ValidationAssist.HasError="True"
                     Grid.Column="1"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     VerticalAlignment="Center"
@@ -54,19 +58,21 @@
                     TextWrapping="NoWrap"
                     Padding="10"
                     Margin="5 5 0 5"
-                         materialDesign:HintAssist.Hint="Number of Weeks"/>
+                    materialDesign:HintAssist.Hint="Number of Weeks"/>
             </Grid>
 
             <!--Button-->
             <Button
+                Command="{Binding CreateSemesterCommand}"
+                IsEnabled="{Binding Path=CanCreate, UpdateSourceTrigger=PropertyChanged}"
                 Grid.Row="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Height="45"
                 Margin="0 5"
-                    materialDesign:ButtonAssist.CornerRadius="5"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    BorderBrush="{x:Null}">
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                BorderBrush="{x:Null}">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>

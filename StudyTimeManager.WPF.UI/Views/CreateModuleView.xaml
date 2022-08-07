@@ -8,10 +8,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
     <materialDesign:Card Padding="15"
-                             Margin="5"
-                             UniformCornerRadius="5"
-                             HorizontalContentAlignment="Stretch"
-                             VerticalContentAlignment="Stretch">
+                         Margin="5"
+                         UniformCornerRadius="5"
+                         HorizontalContentAlignment="Stretch"
+                         VerticalContentAlignment="Stretch"
+                         IsEnabled="{Binding CanCreate}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -36,6 +37,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBox
+                    Text="{Binding ModuleCode}"
                     Grid.Row="0"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     VerticalAlignment="Center"
@@ -45,32 +47,37 @@
                     Padding="10"
                     materialDesign:HintAssist.Hint="Code" />
                 <TextBox
-                             Grid.Row="1"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             AcceptsReturn="True"
-                             TextWrapping="NoWrap"
-                             Padding="10"
-                             materialDesign:HintAssist.Hint="Name" />
+                    Text="{Binding ModuleName}"
+                    Grid.Row="1"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="5 10"
+                    materialDesign:HintAssist.Hint="Name" />
+                <TextBox
+                    Text="{Binding NumberOfCredits}"
+                    Grid.Row="2"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="5 10"
+                    materialDesign:HintAssist.Hint="Number of credits" />
                 <TextBox 
-                             Grid.Row="2"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             AcceptsReturn="True"
-                             TextWrapping="NoWrap"
-                             Padding="10"
-                             materialDesign:HintAssist.Hint="Number of credits" />
-                <TextBox Grid.Row="3"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Stretch"
-                         AcceptsReturn="True"
-                         TextWrapping="NoWrap"
-                         Padding="10"
-                         materialDesign:HintAssist.Hint="Class hours per week" />
+                    Text="{Binding ClassHoursPerWeek}"
+                    Grid.Row="3"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="5 10"
+                    materialDesign:HintAssist.Hint="Class hours per week" />
                 <Button
+                    Command="{Binding CreateModuleCommand}"
                     Grid.Row="4"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"

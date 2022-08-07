@@ -3,7 +3,6 @@ using StudyTimeManager.Domain.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
-using StudyTimeManager.WPF.UI.Stores;
 using StudyTimeManager.Domain.Services.Contracts;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -37,13 +36,13 @@ public partial class CreateSemesterViewModel : ObservableValidator
         _service = service;
         _createModuleViewModel = createModuleViewModel;
 
-        CreateSemesterCommand = new RelayCommand(CreateSemesterr);
+        CreateSemesterCommand = new RelayCommand(Create);
 
         
     }
 
     [RelayCommand]
-    public void CreateSemesterr()
+    public void Create()
     {
         Semester semester = new Semester()
         {

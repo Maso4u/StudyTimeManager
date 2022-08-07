@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyTimeManager.Domain", "StudyTimeManager.Domain\StudyTimeManager.Domain.csproj", "{00D88903-03EE-4CD4-A0BC-D6CEB403BF64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyTimeManager.Domain", "StudyTimeManager.Domain\StudyTimeManager.Domain.csproj", "{00D88903-03EE-4CD4-A0BC-D6CEB403BF64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyTimeManager.WPF.UI", "StudyTimeManager.WPF.UI\StudyTimeManager.WPF.UI.csproj", "{DCBED349-D268-413E-B836-CB0486EA02CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudyTimeManager.WPF.UI", "StudyTimeManager.WPF.UI\StudyTimeManager.WPF.UI.csproj", "{DCBED349-D268-413E-B836-CB0486EA02CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

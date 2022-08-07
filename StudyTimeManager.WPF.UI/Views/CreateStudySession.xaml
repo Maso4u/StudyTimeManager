@@ -50,6 +50,7 @@
                     FlowDirection="LeftToRight"
                     Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
                 <TextBox
+                    Text="{Binding Path=HoursSpent}"
                     materialDesign:TextFieldAssist.HasTrailingIcon="True"
                     materialDesign:TextFieldAssist.TrailingIcon="Timelapse"
                     materialDesign:TextFieldAssist.TrailingIconSize="16"
@@ -66,6 +67,7 @@
             </Grid>
 
             <Button
+                Command="{Binding AddStudySessionCommand}"
                 Grid.Row="4"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
