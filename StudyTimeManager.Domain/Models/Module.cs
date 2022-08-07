@@ -7,7 +7,8 @@
         public int NumberOfCredits { get; set; }
         public int ClassHoursPerWeek { get; set; }
         public int RequiredWeeklySelfStudyHours { get; set; }
-        public ICollection<ModuleSemesterWeek> Weeks { get; set; }
+        public ICollection<ModuleSemesterWeek> Weeks => new List<ModuleSemesterWeek>();
+
         public ModuleSemesterWeek this[int week]
         {
             get
