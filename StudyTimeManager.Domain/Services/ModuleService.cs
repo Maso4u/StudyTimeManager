@@ -13,7 +13,7 @@ namespace StudyTimeManager.Domain.Services
         }
         public bool CreateModule(Module module)
         {
-            
+            module.RequiredWeeklySelfStudyHours = CalculateRequiredWeeklySelfStudyHours(module);
             _semester.Modules.Add(module);
             return _semester.Modules.Contains(module);
         }
@@ -35,7 +35,6 @@ namespace StudyTimeManager.Domain.Services
             _semester.Modules.ToList()[moduleIndex] = module;
         }
 
-        //TODO: Move this to ModuleViewModel
         private int CalculateRequiredWeeklySelfStudyHours(Module module)=>
             ((module.NumberOfCredits * 10) / _semester.NumberOfWeeks) - module.ClassHoursPerWeek;
     }
