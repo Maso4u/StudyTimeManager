@@ -4,7 +4,9 @@ using CommunityToolkit.Mvvm.Messaging;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Windows.Input;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
@@ -55,10 +57,12 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 NumberOfCredits = _numberOfCredits,
                 ClassHoursPerWeek = _classHoursPerWeek
             };
+
             bool successful = _service.ModuleService.CreateModule(module);
 
             if (successful)
             {
+                _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(ModuleCode);
                 SendMessage(module);
             }
 

@@ -19,9 +19,11 @@
                            Text="Semester Modules"
                            FontSize="20"
                            FontFamily="{StaticResource OpenSansSemiBold}"/>
+                
                 <ListView
                     ItemsSource="{Binding Modules}" 
                     SelectedItem="{Binding SelectedModuleListingItemViewModel}"
+                    
                     Grid.IsSharedSizeScope="True"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
                     MaxHeight="200">

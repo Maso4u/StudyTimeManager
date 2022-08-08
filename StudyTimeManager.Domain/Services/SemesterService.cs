@@ -26,4 +26,8 @@ public class SemesterService : ISemesterService
         _semester.NumberOfWeeks = semester.NumberOfWeeks;
         return true;
     }
+
+    public int GetNumberOfWeeks() => _semester.NumberOfWeeks;
+
+    public Semester GetSemester() => _semester;
 }

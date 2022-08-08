@@ -15,6 +15,7 @@ namespace StudyTimeManager.Domain.Services
         {
             module.RequiredWeeklySelfStudyHours = CalculateRequiredWeeklySelfStudyHours(module);
             _semester.Modules.Add(module);
+            
             return _semester.Modules.Contains(module);
         }
 

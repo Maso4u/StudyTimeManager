@@ -1,5 +1,6 @@
 ﻿using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
+using System.Globalization;
 
 namespace StudyTimeManager.Domain.Services
 {
@@ -12,11 +13,28 @@ namespace StudyTimeManager.Domain.Services
             _semester = semester;
         }
 
-        public bool CreateModuleSemesterWeek(string moduleCode, ModuleSemesterWeek moduleSemesterWeek)
+        public void CreateModuleSemesterWeeks(string moduleCode)
         {
-            int initialModuleSemesterWeeksCount = _semester.Modules.Count;
-            _semester.Modules.First(m => m.Code.Equals(moduleCode)).Weeks.Add(moduleSemesterWeek);
-            return _semester.Modules.Count > initialModuleSemesterWeeksCount;
+            Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+
+            DateTime firstDateOfFirstWeek = _semester.StartDate.ToDateTime(TimeOnly.MinValue);
+            int numberOfSemesterWeeks = _semester.NumberOfWeeks;
+
+            for (int counter = 0; counter < numberOfSemesterWeeks; counter++)
+            {
+                DateTime firstDateOfWeek = calendar.AddWeeks(firstDateOfFirstWeek, counter);
+                DateTime lastDateOfWeek = firstDateOfWeek.AddDays(6);
+
+                ModuleSemesterWeek moduleSemesterWeek = new ModuleSemesterWeek()
+                {
+                    StartDate = DateOnly.FromDateTime(firstDateOfWeek),
+                    EndDate = DateOnly.FromDateTime(lastDateOfWeek),
+                    WeekNumber = counter + 1,
+                    RemainingSelfStudyHours = _semester[moduleCode].RequiredWeeklySelfStudyHours
+                };
+                //_semester.Modules.First(m => m.Code.Equals(moduleCode)).Weeks.Add(moduleSemesterWeek);
+                _semester[moduleCode].Weeks.Add(moduleSemesterWeek);
+            }
         }
 
         public ICollection<ModuleSemesterWeek> GetModuleSemesterWeeksForAllModules(int week)
