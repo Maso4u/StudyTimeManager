@@ -1,15 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
 namespace StudyTimeManager.WPF.UI.ViewModels;
 public partial class ModulesListingViewModel : ObservableObject
 {
@@ -19,7 +13,6 @@ public partial class ModulesListingViewModel : ObservableObject
     public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
 
     private ModuleListingItemViewModel _selectedModuleListingItemViewModel;
-
 
     public ModuleListingItemViewModel SelectedModuleListingItemViewModel
     {
@@ -40,7 +33,7 @@ public partial class ModulesListingViewModel : ObservableObject
 
     public void RegisterToModuleCreatedMessage()
     {
-        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this, 
+        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this,
             (_createModuleViewModel, message) =>
                 {
                     _modules.Add(new ModuleListingItemViewModel(message.Value));

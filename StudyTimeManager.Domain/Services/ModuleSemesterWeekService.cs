@@ -1,4 +1,5 @@
-﻿using StudyTimeManager.Domain.Models;
+﻿using StudyTimeManager.Domain.Extensions;
+using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
 using System.Globalization;
 
@@ -17,7 +18,7 @@ namespace StudyTimeManager.Domain.Services
         {
             Calendar calendar = CultureInfo.InvariantCulture.Calendar;
 
-            DateTime firstDateOfFirstWeek = _semester.StartDate.ToDateTime(TimeOnly.MinValue);
+            DateTime firstDateOfFirstWeek = _semester.StartDate.ToDateTime();
             int numberOfSemesterWeeks = _semester.NumberOfWeeks;
 
             for (int counter = 0; counter < numberOfSemesterWeeks; counter++)
@@ -32,9 +33,14 @@ namespace StudyTimeManager.Domain.Services
                     WeekNumber = counter + 1,
                     RemainingSelfStudyHours = _semester[moduleCode].RequiredWeeklySelfStudyHours
                 };
-                //_semester.Modules.First(m => m.Code.Equals(moduleCode)).Weeks.Add(moduleSemesterWeek);
+                
                 _semester[moduleCode].Weeks.Add(moduleSemesterWeek);
             }
+        }
+
+        public ModuleSemesterWeek GetModuleSemesterWeek(string moduleCode, int week)
+        {
+            return _semester[moduleCode][week];
         }
 
         public ICollection<ModuleSemesterWeek> GetModuleSemesterWeeksForAllModules(int week)
@@ -47,12 +53,14 @@ namespace StudyTimeManager.Domain.Services
             return moduleSemesterWeeksFound;
         }
 
-        public bool UpdateSelfStudyHoursOfModuleSemesterWeek(string moduleCode, int week, int remainingHoursLeft)
+        public bool UpdateSelfStudyHoursOfModuleSemesterWeek(string moduleCode, int week, int hoursToDeduct)
         {
-             int oldRemainingHours= _semester.Modules.First(m => m.Code.Equals(moduleCode))[week].RemainingSelfStudyHours;
-            if (remainingHoursLeft<oldRemainingHours)
+            ModuleSemesterWeek moduleSemesterWeek = _semester[moduleCode][week];
+            int oldRemainingHours = moduleSemesterWeek.RemainingSelfStudyHours;
+
+            if (hoursToDeduct < oldRemainingHours)
             {
-                _semester.Modules.First(m => m.Code.Equals(moduleCode))[week].RemainingSelfStudyHours = remainingHoursLeft;
+                _semester[moduleCode][week].RemainingSelfStudyHours -= hoursToDeduct;
                 return true;
             }
             return false;

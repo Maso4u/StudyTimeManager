@@ -14,9 +14,17 @@ namespace StudyTimeManager.Domain.Services
 
         public bool CreateStudySession(string moduleCode, int week, StudySession studySession)
         {
-            int initStudySessions= _semester.Modules.First(m => m.Code.Equals(moduleCode))[week].StudySessions.Count;
-            _semester.Modules.First(m => m.Code.Equals(moduleCode))[week].StudySessions.Add(studySession);
-            return initStudySessions < _semester.Modules.First(m => m.Code.Equals(moduleCode))[week].StudySessions.Count;
+            int initStudySessions= _semester.Modules
+                .First(m => m.Code.Equals(moduleCode))[week]
+                .StudySessions.Count;
+            
+            _semester.Modules
+                .First(m => m.Code.Equals(moduleCode))[week]
+                .StudySessions.Add(studySession);
+
+            return initStudySessions < _semester.Modules
+                .First(m => m.Code.Equals(moduleCode))[week]
+                .StudySessions.Count;
         }
     }
 }

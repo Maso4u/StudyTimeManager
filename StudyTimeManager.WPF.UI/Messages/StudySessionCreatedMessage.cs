@@ -3,9 +3,9 @@ using StudyTimeManager.Domain.Models;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    internal class StudySessionCreatedMessage : ValueChangedMessage<StudySession>
+    internal class StudySessionCreatedMessage : ValueChangedMessage<string>
     {
-        public StudySessionCreatedMessage(StudySession value) : base(value)
+        public StudySessionCreatedMessage(string value) : base(value)
         {
         }
     }

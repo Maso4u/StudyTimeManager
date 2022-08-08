@@ -44,6 +44,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             _service = service;
             WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this,
                 (_createModuleViewModel, message) => { OnSemesterCreated(message); });
+
             CreateModuleCommand =new RelayCommand(Create);
         }
 

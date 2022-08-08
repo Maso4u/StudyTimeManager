@@ -1,5 +1,7 @@
-﻿using StudyTimeManager.Domain.Models;
+﻿using StudyTimeManager.Domain.Extensions;
+using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
+using System.Globalization;
 
 namespace StudyTimeManager.Domain.Services;
 public class SemesterService : ISemesterService
@@ -24,10 +26,19 @@ public class SemesterService : ISemesterService
 
         _semester.StartDate = semester.StartDate;
         _semester.NumberOfWeeks = semester.NumberOfWeeks;
+        _semester.EndDate = CalculateSemesterLastDay(semester.StartDate,semester.NumberOfWeeks);
         return true;
     }
 
     public int GetNumberOfWeeks() => _semester.NumberOfWeeks;
 
     public Semester GetSemester() => _semester;
+
+    private DateOnly CalculateSemesterLastDay(DateOnly startDate, int numberOfWeeks)
+    {
+        Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        DateTime lastDate = calendar.AddWeeks(startDate.ToDateTime(), numberOfWeeks);
+        
+        return DateOnly.FromDateTime(lastDate);
+    }
 }

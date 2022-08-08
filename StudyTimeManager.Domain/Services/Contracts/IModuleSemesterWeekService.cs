@@ -6,6 +6,7 @@ namespace StudyTimeManager.Domain.Services.Contracts
     {
         void CreateModuleSemesterWeeks(string moduleCode);
         bool UpdateSelfStudyHoursOfModuleSemesterWeek(string moduleCode, int week, int remainingHoursLeft);
+        ModuleSemesterWeek GetModuleSemesterWeek(string moduleCode,int week);
         ICollection<ModuleSemesterWeek> GetModuleSemesterWeeksForAllModules(int week);
     }
 }

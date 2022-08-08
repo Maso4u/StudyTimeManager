@@ -8,9 +8,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}"
              MinWidth="250">
-    <materialDesign:Card Padding="15"
-                              Margin="5"
-                              UniformCornerRadius="5">
+    <materialDesign:Card 
+        IsEnabled="{Binding CanCreate}"
+        Padding="15"
+        Margin="5"
+        UniformCornerRadius="5">
         <Grid
             Height="auto"
             HorizontalAlignment="Stretch">
@@ -68,6 +70,8 @@
                 </Grid.ColumnDefinitions>
                 <DatePicker 
                     SelectedDate="{Binding Path=SelectedDate}"
+                    DisplayDateStart="{Binding SemesterStartDate}"
+                    DisplayDateEnd="{Binding SemesterEndDate}"
                     Grid.Column="0"
                     MinWidth="120"
                     Padding="10"
