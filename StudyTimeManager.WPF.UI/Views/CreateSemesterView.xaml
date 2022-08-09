@@ -7,6 +7,7 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
+    
     <materialDesign:Card 
         Padding="15"
         Margin="5"

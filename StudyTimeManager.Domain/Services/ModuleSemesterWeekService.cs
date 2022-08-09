@@ -43,14 +43,18 @@ namespace StudyTimeManager.Domain.Services
             return _semester[moduleCode][week];
         }
 
-        public ICollection<ModuleSemesterWeek> GetModuleSemesterWeeksForAllModules(int week)
+        public ICollection<ModuleSemesterWeek>? GetModuleSemesterWeeksForAModule(string? moduleCode)
         {
-            ICollection<ModuleSemesterWeek> moduleSemesterWeeksFound = new List<ModuleSemesterWeek>();
-            foreach (var module in _semester.Modules)
-            {
-                moduleSemesterWeeksFound.Add(module[week]);
+            try
+            { 
+                ICollection<ModuleSemesterWeek> moduleSemesterWeeksFound = _semester[moduleCode].Weeks;
+            
+                return moduleSemesterWeeksFound;
             }
-            return moduleSemesterWeeksFound;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public bool UpdateSelfStudyHoursOfModuleSemesterWeek(string moduleCode, int week, int hoursToDeduct)

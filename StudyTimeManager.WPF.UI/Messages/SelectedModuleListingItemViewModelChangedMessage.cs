@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using StudyTimeManager.WPF.UI.ViewModels;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    internal class SelectedModuleListingItemViewModelChangedMessage : ValueChangedMessage<string?>
+    internal class SelectedModuleListingItemViewModelChangedMessage : ValueChangedMessage<ModuleListingItemViewModel?>
     {
-        public SelectedModuleListingItemViewModelChangedMessage(string? value) : base(value)
+        public SelectedModuleListingItemViewModelChangedMessage(ModuleListingItemViewModel? value) : base(value)
         {
         }
     }

@@ -40,6 +40,7 @@ namespace StudyTimeManager.WPF.UI
                     services.AddSingleton<CreateModuleViewModel>();
                     services.AddSingleton<CreateModuleStudySessionViewModel>();
                     services.AddSingleton<ModulesListingViewModel>();
+                    services.AddSingleton<ModuleSemesterWeekListingViewModel>();
 
                     services.AddSingleton<MainWindow>((services) => new MainWindow
                     {

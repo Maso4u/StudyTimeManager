@@ -44,5 +44,9 @@
                 DataContext="{Binding ModulesListingViewModel}"
                 Grid.Row="1"/>
         </Grid>
+
+        <views:ModuleSemesterWeeksListingView
+            DataContext="{Binding ModuleSemesterWeekListingViewModel}"
+            Grid.Column="3"/>
     </Grid>
 </Window>

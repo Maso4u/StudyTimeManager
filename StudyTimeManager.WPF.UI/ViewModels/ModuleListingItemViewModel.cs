@@ -9,7 +9,7 @@ public class ModuleListingItemViewModel
     public string? ModuleName => _module.Name;
     public int NumberOfCredits => _module.NumberOfCredits;
     public int ClassHoursPerWeek => _module.ClassHoursPerWeek;
-    public ICommand DeleteModuleCommand { get; }
+    public int RequiredWeeklyStudyHours => _module.RequiredWeeklySelfStudyHours;
     public ModuleListingItemViewModel(Module module)
     {
         _module = module;

@@ -12,9 +12,9 @@ public partial class ModulesListingViewModel : ObservableObject
 
     public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
 
-    private ModuleListingItemViewModel _selectedModuleListingItemViewModel;
+    private ModuleListingItemViewModel? _selectedModuleListingItemViewModel;
 
-    public ModuleListingItemViewModel SelectedModuleListingItemViewModel
+    public ModuleListingItemViewModel? SelectedModuleListingItemViewModel
     {
         get => _selectedModuleListingItemViewModel;
         set
@@ -29,6 +29,7 @@ public partial class ModulesListingViewModel : ObservableObject
         _service = service;
         _modules = new ObservableCollection<ModuleListingItemViewModel>();
         RegisterToModuleCreatedMessage();
+        RegisterToModuleDeletedMessage();
     }
 
     public void RegisterToModuleCreatedMessage()
@@ -39,13 +40,26 @@ public partial class ModulesListingViewModel : ObservableObject
                     _modules.Add(new ModuleListingItemViewModel(message.Value));
                 });
     }
+    public void RegisterToModuleDeletedMessage()
+    {
+        WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this,
+            (_createModuleViewModel, message) =>
+                {
+                    UpdateListing();
+                });
+    }
 
-    private void SendSelectionChangedMessage(ModuleListingItemViewModel selectedModuleListingViewModel)
+    private void SendSelectionChangedMessage(ModuleListingItemViewModel? selectedModuleListingViewModel)
     {
         SelectedModuleListingItemViewModelChangedMessage message =
-                        new SelectedModuleListingItemViewModelChangedMessage(selectedModuleListingViewModel.ModuleCode);
+                        new SelectedModuleListingItemViewModelChangedMessage(selectedModuleListingViewModel);
 
         WeakReferenceMessenger.Default.Send(message);
+    }
+
+    private void UpdateListing()
+    {
+        _modules.Remove(SelectedModuleListingItemViewModel);
     }
 
 }

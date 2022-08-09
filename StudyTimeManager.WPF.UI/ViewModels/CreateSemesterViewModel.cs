@@ -22,7 +22,8 @@ public partial class CreateSemesterViewModel : ObservableValidator
     [NotifyPropertyChangedFor(nameof(CanCreate))]
     private int _numberOfWeeks;
 
-    public bool CanCreate => _numberOfWeeks>0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
+    public bool CanCreate => this.HasErrors;
+    //public bool CanCreate => _numberOfWeeks>0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
 
     private readonly IServiceManager _service;
     private readonly CreateModuleViewModel _createModuleViewModel;

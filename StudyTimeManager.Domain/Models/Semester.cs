@@ -7,7 +7,7 @@
         public DateOnly EndDate { get; set; }
         public ICollection<Module> Modules  { get; set; } = new List<Module>();
 
-        public Module this[string moduleCode]
+        public Module this[string? moduleCode]
         {
             get
             {
