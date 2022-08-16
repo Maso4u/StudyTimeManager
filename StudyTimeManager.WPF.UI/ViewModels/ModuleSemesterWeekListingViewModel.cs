@@ -4,12 +4,15 @@ using CommunityToolkit.Mvvm.Messaging;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
-public partial class ModuleSemesterWeekListingViewModel : ObservableObject
+public partial class ModuleSemesterWeekListingViewModel : ObservableObject, 
+    IRecipient<StudySessionCreatedMessage>, 
+    IRecipient<SelectedModuleListingItemViewModelChangedMessage>
 {
     private readonly IServiceManager _service;
     private readonly ObservableCollection<ModuleSemesterWeekListingItemViewModel> _moduleSemesterListingItems;
@@ -23,19 +26,16 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject
     [ObservableProperty]
     private bool _canDelete;
 
-    public ICommand DeleteModuleCommand { get; }
-
-
     public ModuleSemesterWeekListingViewModel(IServiceManager service)
     {
         _service = service;
         _moduleSemesterListingItems = new ObservableCollection<ModuleSemesterWeekListingItemViewModel>();
         CanDelete = false;
-        RegisterToModuleSelectionChangeMessage();
-        DeleteModuleCommand = new RelayCommand(Delete);
+        RegisterToMessages();
     }
 
-    private void Delete()
+    [RelayCommand]
+    private void DeleteModule()
     {
         bool isDeleted = _service.ModuleService.DeleteModule(Module.ModuleCode);
         if (isDeleted)
@@ -47,17 +47,6 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject
             Module = null;
             CanDelete = false;
         }
-    }
-
-    public void RegisterToModuleSelectionChangeMessage()
-    {
-        WeakReferenceMessenger.Default
-            .Register<SelectedModuleListingItemViewModelChangedMessage>(this,
-            (_moduleSemesterWeekListingViewModel, message) =>
-            {
-                Module = message.Value;
-                UpdateListing();
-            });
     }
 
     private void UpdateListing()
@@ -77,5 +66,25 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject
         }
     }
 
+    public void RegisterToMessages()
+    {
+        WeakReferenceMessenger.Default
+            .Register<SelectedModuleListingItemViewModelChangedMessage>(this);
+        WeakReferenceMessenger.Default.Register<StudySessionCreatedMessage>(this);
+    }
+
+    public void Receive(SelectedModuleListingItemViewModelChangedMessage message)
+    {
+        Module = message.Value;
+        UpdateListing();
+    }
+
+    public void Receive(StudySessionCreatedMessage message)
+    {
+        if (Module.ModuleCode.Equals(message.Value))
+        {
+            UpdateListing();
+        }
+    }
 }
 

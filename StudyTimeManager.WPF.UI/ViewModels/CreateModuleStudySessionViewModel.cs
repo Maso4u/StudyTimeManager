@@ -13,7 +13,10 @@ using System.Linq;
 using System.Windows.Input;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
-public partial class CreateModuleStudySessionViewModel : ObservableValidator
+public partial class CreateModuleStudySessionViewModel : ObservableValidator, 
+    IRecipient<ModuleDeletedMessage>,
+    IRecipient<SemesterCreatedMessage>,
+    IRecipient<ModuleCreatedMessage>
 {
 
     private readonly ObservableCollection<ModuleListingItemViewModel> _modules;
@@ -45,23 +48,19 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator
     [ObservableProperty]
     private DateTime _semesterEndDate;
 
-    public ICommand AddStudySessionCommand { get; }
-
     public CreateModuleStudySessionViewModel(IServiceManager service)
     {
         _service = service;
         _modules = new ObservableCollection<ModuleListingItemViewModel>();
-        _selectedDate = DateTime.Now;
         CanCreate = _semesterCreated && _moduleCreated;
-        AddStudySessionCommand = new RelayCommand(Create);
-        RegisterToSemesterCreatedMessage();
-        RegisterToModuleCreatedMessage();
-        RegisterToModuleDeletedMessage();
+        SelectedDate = SemesterStartDate;
+        RegisterToMessages();
     }
 
-    private void Create()
+    [RelayCommand]
+    private void AddStudySession()
     {
-        string moduleCode = _selectedModuleListingItemViewModel.ModuleCode;
+        string? moduleCode = _selectedModuleListingItemViewModel.ModuleCode;
         int week = DetermineWeekOfStudyStudySession();
 
         StudySession studySession = new StudySession()
@@ -70,7 +69,9 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator
             HoursSpent = HoursSpent
         };
 
-        bool successful = _service.StudySessionService.CreateStudySession(moduleCode, week, studySession);
+        bool successful = _service.StudySessionService
+            .CreateStudySession(moduleCode, week, studySession);
+
         if (successful)
         {
             if (UpdateSelfStudyHoursOfWeek(moduleCode, week, HoursSpent))
@@ -81,12 +82,20 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator
         }
     }
 
+    private void RegisterToMessages()
+    {
+        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this);
+        WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this);
+        WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this);
+    }
+
     private int DetermineWeekOfStudyStudySession()
     {
         string moduleCode = _selectedModuleListingItemViewModel.ModuleCode;
         Module module = _service.ModuleService.GetModule(moduleCode);
 
         int weekNumber = 1;
+
         foreach (var week in module.Weeks)
         {
             DateTime weekStartDate = week.StartDate.ToDateTime();
@@ -108,45 +117,36 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator
             .UpdateSelfStudyHoursOfModuleSemesterWeek(moduleCode, week, HoursSpent);
     }
 
-    private void RegisterToModuleCreatedMessage()
-    {
-        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this,
-            (_createModuleStudySessionViewModel, message) =>
-            {
-                _moduleCreated = true;
-                CanCreate = _semesterCreated && _moduleCreated;
-                _modules.Add(new ModuleListingItemViewModel(message.Value));
-            });
-    }
-
-    private void RegisterToSemesterCreatedMessage()
-    {
-        WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this,
-            (_createModuleStudySessionViewModel, message) =>
-            {
-                _semesterCreated = true;
-                CanCreate = _semesterCreated && _moduleCreated;
-                SemesterStartDate = _service.SemesterService.GetSemester().StartDate.ToDateTime();
-                SemesterEndDate = _service.SemesterService.GetSemester().EndDate.ToDateTime();
-            });
-    }
-    public void RegisterToModuleDeletedMessage()
-    {
-        WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this,
-            (_createModuleViewModel, message) =>
-            {
-                RemoveModule(message.Value);
-                if (Modules.Count()<=0)
-                {
-                    CanCreate = false;
-                }
-            });
-    }
     private void RemoveModule(ModuleListingItemViewModel module)
     {
         ModuleListingItemViewModel moduleListingFound = _modules
             .FirstOrDefault(m => m.ModuleCode == module.ModuleCode);
 
         _modules.Remove(moduleListingFound);
+    }
+
+    public void Receive(ModuleDeletedMessage message)
+    {
+        RemoveModule(message.Value);
+        if (Modules.Count() <= 0)
+        {
+            CanCreate = false;
+        }
+    }
+
+    public void Receive(SemesterCreatedMessage message)
+    {
+        _semesterCreated = true;
+        CanCreate = _semesterCreated && _moduleCreated;
+        SemesterStartDate = _service.SemesterService.GetSemester().StartDate.ToDateTime();
+        SemesterEndDate = _service.SemesterService.GetSemester().EndDate.ToDateTime();
+    }
+
+    public void Receive(ModuleCreatedMessage message)
+    {
+        SelectedDate = SemesterStartDate;
+        _moduleCreated = true;
+        CanCreate = _semesterCreated && _moduleCreated;
+        _modules.Add(new ModuleListingItemViewModel(message.Value));
     }
 }

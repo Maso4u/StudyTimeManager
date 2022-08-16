@@ -5,7 +5,9 @@ using StudyTimeManager.WPF.UI.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 namespace StudyTimeManager.WPF.UI.ViewModels;
-public partial class ModulesListingViewModel : ObservableObject
+public partial class ModulesListingViewModel : ObservableObject,
+    IRecipient<ModuleCreatedMessage>,
+    IRecipient<ModuleDeletedMessage>
 {
     private readonly IServiceManager _service;
     private readonly ObservableCollection<ModuleListingItemViewModel> _modules;
@@ -28,25 +30,22 @@ public partial class ModulesListingViewModel : ObservableObject
     {
         _service = service;
         _modules = new ObservableCollection<ModuleListingItemViewModel>();
-        RegisterToModuleCreatedMessage();
-        RegisterToModuleDeletedMessage();
+        RegisterToMessages();
     }
 
-    public void RegisterToModuleCreatedMessage()
+    public void RegisterToMessages()
     {
-        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this,
-            (_createModuleViewModel, message) =>
-                {
-                    _modules.Add(new ModuleListingItemViewModel(message.Value));
-                });
+        WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this);
+        WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this);
     }
-    public void RegisterToModuleDeletedMessage()
+
+    public void Receive(ModuleCreatedMessage message)
     {
-        WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this,
-            (_createModuleViewModel, message) =>
-                {
-                    UpdateListing();
-                });
+        _modules.Add(new ModuleListingItemViewModel(message.Value));
+    }
+    public void Receive(ModuleDeletedMessage message)
+    {
+        _modules.Remove(SelectedModuleListingItemViewModel);
     }
 
     private void SendSelectionChangedMessage(ModuleListingItemViewModel? selectedModuleListingViewModel)
@@ -57,9 +56,5 @@ public partial class ModulesListingViewModel : ObservableObject
         WeakReferenceMessenger.Default.Send(message);
     }
 
-    private void UpdateListing()
-    {
-        _modules.Remove(SelectedModuleListingItemViewModel);
-    }
 
 }

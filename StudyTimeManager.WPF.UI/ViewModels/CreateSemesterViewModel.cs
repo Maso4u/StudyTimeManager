@@ -21,29 +21,19 @@ public partial class CreateSemesterViewModel : ObservableValidator
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCreate))]
     private int _numberOfWeeks;
-
-    public bool CanCreate => this.HasErrors;
-    //public bool CanCreate => _numberOfWeeks>0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
+    public bool CanCreate => _numberOfWeeks>0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
 
     private readonly IServiceManager _service;
-    private readonly CreateModuleViewModel _createModuleViewModel;
 
-    public ICommand CreateSemesterCommand { get; }
-
-    public CreateSemesterViewModel(IServiceManager service, CreateModuleViewModel createModuleViewModel)
+    public CreateSemesterViewModel(IServiceManager service)
     {
         Semester semester = new Semester();
         _startDate = DateTime.Now;
         _service = service;
-        _createModuleViewModel = createModuleViewModel;
-
-        CreateSemesterCommand = new RelayCommand(Create);
-
-        
     }
 
     [RelayCommand]
-    public void Create()
+    private void CreateSemester()
     {
         Semester semester = new Semester()
         {

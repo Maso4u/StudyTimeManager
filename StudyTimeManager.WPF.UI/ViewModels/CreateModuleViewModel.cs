@@ -11,7 +11,8 @@ using System.Windows.Input;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
-    public partial class CreateModuleViewModel : ObservableValidator
+    public partial class CreateModuleViewModel : ObservableValidator, 
+        IRecipient<SemesterCreatedMessage>
     {
 
         [Required]
@@ -37,19 +38,14 @@ namespace StudyTimeManager.WPF.UI.ViewModels
 
         private readonly IServiceManager _service;
 
-        public ICommand CreateModuleCommand { get; }
-
         public CreateModuleViewModel(IServiceManager service)
         {
             _service = service;
-            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this,
-                (_createModuleViewModel, message) => { OnSemesterCreated(message); });
-
-            CreateModuleCommand =new RelayCommand(Create);
+            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this);
         }
 
         [RelayCommand]
-        public void Create()
+        private void CreateModule()
         {
             Module module = new Module()
             {
@@ -75,6 +71,9 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             WeakReferenceMessenger.Default.Send(message);
         }
 
-        private void OnSemesterCreated(SemesterCreatedMessage message)=> CanCreate = message.Value;
+        public void Receive(SemesterCreatedMessage message)
+        {
+            CanCreate = message.Value;
+        }
     }
 }
