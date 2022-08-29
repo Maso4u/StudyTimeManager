@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MaterialDesignThemes.Wpf;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
@@ -9,17 +10,21 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         public CreateModuleStudySessionViewModel CreateModuleStudySessionViewModel { get; set; }
         public ModulesListingViewModel ModulesListingViewModel { get; set; }
         public ModuleSemesterWeekListingViewModel ModuleSemesterWeekListingViewModel { get; set; }
+        public ISnackbarMessageQueue MessageQueue { get; }
         public MainWindowViewModel(CreateSemesterViewModel createSemesterViewModel,
             CreateModuleViewModel createModuleViewModel,
             CreateModuleStudySessionViewModel createModuleStudySessionViewModel,
             ModulesListingViewModel modulesListingViewModel,
-            ModuleSemesterWeekListingViewModel moduleSemesterWeekListingViewModel)
+            ModuleSemesterWeekListingViewModel moduleSemesterWeekListingViewModel,
+            ISnackbarMessageQueue messageQueue)
         {
             CreateSemesterViewModel = createSemesterViewModel;
             CreateModuleViewModel = createModuleViewModel;
             CreateModuleStudySessionViewModel = createModuleStudySessionViewModel;
             ModulesListingViewModel = modulesListingViewModel;
             ModuleSemesterWeekListingViewModel = moduleSemesterWeekListingViewModel;
+
+            MessageQueue = messageQueue; 
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+
 namespace StudyTimeManager.WPF.UI.ViewModels;
 public partial class ModulesListingViewModel : ObservableObject,
     IRecipient<ModuleCreatedMessage>,
@@ -45,7 +48,10 @@ public partial class ModulesListingViewModel : ObservableObject,
     }
     public void Receive(ModuleDeletedMessage message)
     {
-        _modules.Remove(SelectedModuleListingItemViewModel);
+        ModuleListingItemViewModel module = _modules
+            .First(m => m.ModuleCode.Equals(message.Value.Code));
+
+        _modules.Remove(module);
     }
 
     private void SendSelectionChangedMessage(ModuleListingItemViewModel? selectedModuleListingViewModel)

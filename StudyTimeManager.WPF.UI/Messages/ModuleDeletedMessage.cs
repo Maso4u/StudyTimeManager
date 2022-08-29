@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using StudyTimeManager.WPF.UI.ViewModels;
+using StudyTimeManager.Domain.Models;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    public class ModuleDeletedMessage : ValueChangedMessage<ModuleListingItemViewModel>
+    public class ModuleDeletedMessage : ValueChangedMessage<Module>
     {
-        public ModuleDeletedMessage(ModuleListingItemViewModel value) : base(value)
+        public ModuleDeletedMessage(Module value) : base(value)
         {
         }
     }

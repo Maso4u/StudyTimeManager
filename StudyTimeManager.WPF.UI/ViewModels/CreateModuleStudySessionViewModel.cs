@@ -117,10 +117,10 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator,
             .UpdateSelfStudyHoursOfModuleSemesterWeek(moduleCode, week, HoursSpent);
     }
 
-    private void RemoveModule(ModuleListingItemViewModel module)
+    private void RemoveModule(Module module)
     {
         ModuleListingItemViewModel moduleListingFound = _modules
-            .FirstOrDefault(m => m.ModuleCode == module.ModuleCode);
+            .FirstOrDefault(m => m.ModuleCode == module.Code);
 
         _modules.Remove(moduleListingFound);
     }

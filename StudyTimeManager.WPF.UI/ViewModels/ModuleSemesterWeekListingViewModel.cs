@@ -38,9 +38,18 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
     private void DeleteModule()
     {
         bool isDeleted = _service.ModuleService.DeleteModule(Module.ModuleCode);
+
         if (isDeleted)
         {
-            ModuleDeletedMessage message = new ModuleDeletedMessage(Module);
+            Module module = new Module() {
+                Code = Module.ModuleCode,
+                Name = Module.ModuleName,
+                NumberOfCredits = Module.NumberOfCredits,
+                ClassHoursPerWeek = Module.ClassHoursPerWeek,
+                RequiredWeeklySelfStudyHours = Module.RequiredWeeklyStudyHours
+            };
+
+            ModuleDeletedMessage message = new ModuleDeletedMessage(module);
             WeakReferenceMessenger.Default.Send(message);
 
             _moduleSemesterListingItems.Clear();
@@ -55,7 +64,7 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
         if (Module != null)
         {
             CanDelete = true;
-            ICollection<ModuleSemesterWeek> semesterWeeks = _service.ModuleSemesterWeekService
+            ICollection<ModuleSemesterWeek>? semesterWeeks = _service.ModuleSemesterWeekService
                 .GetModuleSemesterWeeksForAModule(Module.ModuleCode);
 
             foreach (var semesterWeek in semesterWeeks)

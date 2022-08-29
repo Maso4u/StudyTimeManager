@@ -7,6 +7,7 @@
         xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="550" MinWidth="1200"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         FontFamily="{StaticResource MontserratRegular}">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -14,6 +15,13 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
+
+        <materialDesign:Snackbar
+            MessageQueue="{Binding MessageQueue}"
+            Panel.ZIndex="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"/>
+
         <Grid Grid.Row="0"
               HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>

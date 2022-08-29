@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MaterialDesignThemes.Wpf;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
@@ -36,18 +37,21 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         [ObservableProperty]
         public bool _canCreate = false;
 
-        private readonly IServiceManager _service;
+        private Module module;
 
-        public CreateModuleViewModel(IServiceManager service)
+        private readonly IServiceManager _service;
+        public ISnackbarMessageQueue MessageQueue { get; }
+        public CreateModuleViewModel(IServiceManager service, ISnackbarMessageQueue messageQueue)
         {
             _service = service;
+            MessageQueue = messageQueue;
             WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this);
         }
 
         [RelayCommand]
         private void CreateModule()
         {
-            Module module = new Module()
+            module = new Module()
             {
                 Code = _moduleCode,
                 Name = _moduleName,
@@ -61,8 +65,21 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             {
                 _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(ModuleCode);
                 SendMessage(module);
+
+                MessageQueue.Enqueue("Module successfully created.", "UNDO", () => UndoCreate());
             }
 
+        }
+
+        private void UndoCreate()
+        {
+            bool isDeleted = _service.ModuleService.DeleteModule(ModuleCode);
+
+            if (isDeleted)
+            {
+                ModuleDeletedMessage message = new ModuleDeletedMessage(module);
+                WeakReferenceMessenger.Default.Send(message);
+            }
         }
 
         private void SendMessage(Module module)
