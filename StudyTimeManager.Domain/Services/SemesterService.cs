@@ -39,6 +39,6 @@ public class SemesterService : ISemesterService
         Calendar calendar = CultureInfo.InvariantCulture.Calendar;
         DateTime lastDate = calendar.AddWeeks(startDate.ToDateTime(), numberOfWeeks);
         
-        return DateOnly.FromDateTime(lastDate);
+        return DateOnly.FromDateTime(lastDate.AddDays(-1));
     }
 }

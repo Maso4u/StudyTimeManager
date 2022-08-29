@@ -13,6 +13,11 @@ namespace StudyTimeManager.Domain.Services
         }
         public bool CreateModule(Module module)
         {
+            if (_semester.Modules.Contains(module))
+            {
+                return false;
+            }
+
             module.RequiredWeeklySelfStudyHours = CalculateRequiredWeeklySelfStudyHours(module);
             _semester.Modules.Add(module);
             
