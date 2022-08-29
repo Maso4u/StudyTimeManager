@@ -9,9 +9,22 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.3-ci259" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-preview.7.22375.6" />
   </ItemGroup>
+	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
+
+		<RemoveDuplicates Inputs="@(Analyzer)">
+			<Output
+                TaskParameter="Filtered"
+                ItemName="FilteredAnalyzer"/>
+		</RemoveDuplicates>
+
+		<ItemGroup>
+			<Analyzer Remove="@(Analyzer)" />
+			<Analyzer Include="@(FilteredAnalyzer)" />
+		</ItemGroup>
+	</Target>
 
   <ItemGroup>
     <ProjectReference Include="..\StudyTimeManager.Domain\StudyTimeManager.Domain.csproj" />
