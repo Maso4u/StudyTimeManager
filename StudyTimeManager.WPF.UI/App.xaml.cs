@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services;
@@ -20,19 +22,22 @@ namespace StudyTimeManager.WPF.UI
     /// </summary>
     public partial class App : Application
     {
-        //private readonly Semester semester;
         private readonly IHost _host;
         public App()
         {
-            _host = Host.CreateDefaultBuilder()
+            _host = Host.CreateDefaultBuilder() 
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<Semester>();
 
+                    services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
                     services.AddSingleton<IServiceManager, ServiceManager>();
                     services.AddSingleton<IModuleService, ModuleService>();
                     services.AddSingleton<IModuleSemesterWeekService, ModuleSemesterWeekService>();
                     services.AddSingleton<IStudySessionService, StudySessionService>();
+
+                    //snackbar message queue
+                    services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
                     //ViewModels
                     services.AddSingleton<MainWindowViewModel>();
