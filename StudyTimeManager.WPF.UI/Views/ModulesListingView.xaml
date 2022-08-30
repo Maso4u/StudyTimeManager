@@ -22,8 +22,8 @@
                 
                 <ListView
                     ItemsSource="{Binding Modules}" 
+                    SelectionMode="Single"
                     SelectedItem="{Binding SelectedModuleListingItemViewModel}"
-                    
                     Grid.IsSharedSizeScope="True"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
                     MaxHeight="200">

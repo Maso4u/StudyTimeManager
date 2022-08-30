@@ -12,6 +12,7 @@ using System.Windows.Input;
 namespace StudyTimeManager.WPF.UI.ViewModels;
 public partial class ModuleSemesterWeekListingViewModel : ObservableObject, 
     IRecipient<StudySessionCreatedMessage>, 
+    IRecipient<StudySessionRemovedMessage>,
     IRecipient<SelectedModuleListingItemViewModelChangedMessage>
 {
     private readonly IServiceManager _service;
@@ -80,6 +81,7 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
         WeakReferenceMessenger.Default
             .Register<SelectedModuleListingItemViewModelChangedMessage>(this);
         WeakReferenceMessenger.Default.Register<StudySessionCreatedMessage>(this);
+        WeakReferenceMessenger.Default.Register<StudySessionRemovedMessage>(this);
     }
 
     public void Receive(SelectedModuleListingItemViewModelChangedMessage message)
@@ -90,7 +92,19 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
 
     public void Receive(StudySessionCreatedMessage message)
     {
-        if (Module.ModuleCode.Equals(message.Value))
+        if (Module != null)
+        {
+            if (Module.ModuleCode.Equals(message.Value))
+            {
+                UpdateListing();
+            }
+        }
+        
+    }
+
+    public void Receive(StudySessionRemovedMessage message)
+    {
+        if (message.Value.Equals(Module.ModuleCode))
         {
             UpdateListing();
         }

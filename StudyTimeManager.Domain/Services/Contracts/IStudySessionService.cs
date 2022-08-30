@@ -5,5 +5,6 @@ namespace StudyTimeManager.Domain.Services.Contracts
     public interface IStudySessionService
     {
         bool CreateStudySession(string moduleCode, int week,StudySession studySession);
+        bool RemoveStudySession(string moduleCode, int week, DateOnly date);
     }
 }

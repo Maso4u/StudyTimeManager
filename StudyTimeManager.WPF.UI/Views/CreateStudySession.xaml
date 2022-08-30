@@ -69,7 +69,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <DatePicker 
-                    SelectedDate="{Binding Path=SelectedDate}"
+                    SelectedDate="{Binding SelectedDate}"
                     DisplayDateStart="{Binding SemesterStartDate}"
                     DisplayDateEnd="{Binding SemesterEndDate}"
                     Grid.Column="0"

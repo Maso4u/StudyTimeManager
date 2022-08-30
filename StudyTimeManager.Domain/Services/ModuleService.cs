@@ -11,9 +11,16 @@ namespace StudyTimeManager.Domain.Services
         {
             _semester = semester;
         }
+
         public bool CreateModule(Module module)
         {
-            if (_semester.Modules.Contains(module))
+            Module foundModule = null;
+            if (_semester.Modules.Count > 0)
+            {
+                foundModule = _semester[module.Code];
+            }
+            
+            if (foundModule != null)
             {
                 return false;
             }

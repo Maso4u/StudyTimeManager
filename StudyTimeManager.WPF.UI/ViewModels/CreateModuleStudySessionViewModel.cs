@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MaterialDesignThemes.Wpf;
 using StudyTimeManager.Domain.Extensions;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services.Contracts;
@@ -35,22 +36,23 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator,
     [ObservableProperty]
     private bool _canCreate;
 
-    private bool _semesterCreated = false;
-    private bool _moduleCreated = false;
-
-    private readonly IServiceManager _service;
-
-    public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
-
     [ObservableProperty]
     private DateTime _semesterStartDate;
 
     [ObservableProperty]
     private DateTime _semesterEndDate;
 
-    public CreateModuleStudySessionViewModel(IServiceManager service)
+
+    private bool _semesterCreated = false;
+    private bool _moduleCreated = false;
+    public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
+    private readonly IServiceManager _service;
+    public ISnackbarMessageQueue MessageQueue { get; }
+    public CreateModuleStudySessionViewModel(IServiceManager service, 
+        ISnackbarMessageQueue messageQueue)
     {
         _service = service;
+        MessageQueue = messageQueue;
         _modules = new ObservableCollection<ModuleListingItemViewModel>();
         CanCreate = _semesterCreated && _moduleCreated;
         SelectedDate = SemesterStartDate;
@@ -78,7 +80,23 @@ public partial class CreateModuleStudySessionViewModel : ObservableValidator,
             {
                 StudySessionCreatedMessage message = new StudySessionCreatedMessage(moduleCode);
                 WeakReferenceMessenger.Default.Send(message);
+                MessageQueue.Enqueue("Study session registered successfully.", 
+                    "UNDO", () => UndoStudySession(moduleCode,week,HoursSpent));
             }
+        }
+    }
+
+    private void UndoStudySession(string moduleCode, int week, int HoursSpent)
+    {
+        DateOnly date = DateOnly.FromDateTime(SelectedDate);
+
+        bool successful = _service.StudySessionService
+            .RemoveStudySession(moduleCode, week, date);
+
+        if (successful)
+        {
+            StudySessionRemovedMessage message = new StudySessionRemovedMessage(moduleCode);
+            WeakReferenceMessenger.Default.Send(message);
         }
     }
 

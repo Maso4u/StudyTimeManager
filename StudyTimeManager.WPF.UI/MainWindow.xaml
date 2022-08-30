@@ -44,10 +44,13 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            
             <views:CreateStudySession
                 DataContext="{Binding CreateModuleStudySessionViewModel}"
                 Width="350"
-                HorizontalAlignment="Left"/>
+                HorizontalAlignment="Left"
+                Grid.Row="0"/>
+            
             <views:ModulesListingView
                 DataContext="{Binding ModulesListingViewModel}"
                 Grid.Row="1"/>

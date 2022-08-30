@@ -4,10 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
+             xmlns:converters="clr-namespace:StudyTimeManager.WPF.UI.Converters"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
-    
+    <UserControl.Resources>
+        <converters:StringToIntConverter x:Key="StringToIntConverter"/>
+    </UserControl.Resources>
     <materialDesign:Card 
         Padding="15"
         Margin="5"
@@ -48,8 +51,7 @@
                     Margin="0 5 5 5"
                     Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
 
-                <TextBox 
-                    Text="{Binding Path=NumberOfWeeks, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox
                     materialDesign:ValidationAssist.HasError="True"
                     Grid.Column="1"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
@@ -59,7 +61,15 @@
                     TextWrapping="NoWrap"
                     Padding="10"
                     Margin="5 5 0 5"
-                    materialDesign:HintAssist.Hint="Number of Weeks"/>
+                    materialDesign:HintAssist.Hint="Number of Weeks">
+                    <TextBox.Text>
+                        <Binding Path="NumberOfWeeks" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.Converter>
+                                <converters:StringToIntConverter/>
+                            </Binding.Converter>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </Grid>
 
             <!--Button-->
