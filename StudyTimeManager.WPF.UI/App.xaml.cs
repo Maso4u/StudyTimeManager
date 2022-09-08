@@ -1,18 +1,10 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Domain.Services;
 using StudyTimeManager.Domain.Services.Contracts;
 using StudyTimeManager.WPF.UI.ViewModels;
-using StudyTimeManager.WPF.UI.Views;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace StudyTimeManager.WPF.UI
@@ -25,21 +17,24 @@ namespace StudyTimeManager.WPF.UI
         private readonly IHost _host;
         public App()
         {
-            _host = Host.CreateDefaultBuilder() 
+            //configure dependency injection
+            _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<Semester>();
 
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+                    //services to be injected 
                     services.AddSingleton<IServiceManager, ServiceManager>();
                     services.AddSingleton<IModuleService, ModuleService>();
                     services.AddSingleton<IModuleSemesterWeekService, ModuleSemesterWeekService>();
                     services.AddSingleton<IStudySessionService, StudySessionService>();
 
-                    //snackbar message queue
+                    //snackbar message queue to be injected
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
-                    //ViewModels
+                    //ViewModels to be injected via constructors
                     services.AddSingleton<MainWindowViewModel>();
                     services.AddSingleton<CreateSemesterViewModel>();
                     services.AddSingleton<CreateModuleViewModel>();
@@ -47,13 +42,14 @@ namespace StudyTimeManager.WPF.UI
                     services.AddSingleton<ModulesListingViewModel>();
                     services.AddSingleton<ModuleSemesterWeekListingViewModel>();
 
+                    //assign datacontext to the mainwindow to be the main window viewmodel
                     services.AddSingleton<MainWindow>((services) => new MainWindow
                     {
                         DataContext = services.GetRequiredService<MainWindowViewModel>()
                     });
 
                 }).Build();
-            
+
 
         }
         protected override void OnStartup(StartupEventArgs e)

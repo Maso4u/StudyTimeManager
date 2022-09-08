@@ -7,8 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
+/// <summary>
+/// Abstraction of an semester week to be displayed in a listing of semester week for a module
+/// </summary>
 public class ModuleSemesterWeekListingItemViewModel 
 {
+    /// <summary>
+    /// The semester week of a module to be listed
+    /// </summary>
     private readonly ModuleSemesterWeek _moduleSemesterWeek;
 
     public int WeekNumber => _moduleSemesterWeek.WeekNumber;

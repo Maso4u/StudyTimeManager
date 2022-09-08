@@ -8,11 +8,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
+/// <summary>
+/// Abstraction of the view responsible for listing modules
+/// </summary>
 public partial class ModulesListingViewModel : ObservableObject,
     IRecipient<ModuleCreatedMessage>,
     IRecipient<ModuleDeletedMessage>
 {
     private readonly IServiceManager _service;
+
+    /// <summary>
+    /// Observable collection of modules 
+    /// </summary>
     private readonly ObservableCollection<ModuleListingItemViewModel> _modules;
 
     public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
