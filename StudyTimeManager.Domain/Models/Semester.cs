@@ -35,7 +35,7 @@ public class Semester
     {
         get
         {
-            return Modules.First(m => m.Code.Equals(moduleCode));
+            return Modules.FirstOrDefault(m => m.Code.Equals(moduleCode));
         }
     }
 }

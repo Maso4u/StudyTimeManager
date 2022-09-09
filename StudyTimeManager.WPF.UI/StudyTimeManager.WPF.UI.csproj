@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+	
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,9 +16,7 @@
 	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
 
 		<RemoveDuplicates Inputs="@(Analyzer)">
-			<Output
-                TaskParameter="Filtered"
-                ItemName="FilteredAnalyzer"/>
+			<Output TaskParameter="Filtered" ItemName="FilteredAnalyzer" />
 		</RemoveDuplicates>
 
 		<ItemGroup>
@@ -32,6 +31,18 @@
 
   <ItemGroup>
     <Folder Include="ValidationRules\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Production.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
