@@ -1,6 +1,7 @@
-﻿using StudyTimeManager.Domain.Models;
+﻿using Shared.DTOs.StudySession;
+using StudyTimeManager.Domain.Models;
 
-namespace StudyTimeManager.Domain.Services.Contracts;
+namespace StudyTimeManager.Services.Contracts;
 
 /// <summary>
 /// Handles CRUD operations for a module study session
@@ -20,7 +21,7 @@ public interface IStudySessionService
     /// </param>
     /// <param name="studySession">The study session to be created.</param>
     /// <returns></returns>
-    bool CreateStudySession(string moduleCode, int week, StudySession studySession);
+    StudySessionDTO CreateStudySession(Guid moduleId, StudySessionForCreationDTO studySession);
 
     /// <summary>
     /// Removes study session in module with a code equal to <paramref name="moduleCode"/>

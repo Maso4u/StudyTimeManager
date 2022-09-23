@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Shared.DTOs.ModuleSemesterWeek;
 using StudyTimeManager.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,14 @@ public class ModuleSemesterWeekListingItemViewModel
     /// <summary>
     /// The semester week of a module to be listed
     /// </summary>
-    private readonly ModuleSemesterWeek _moduleSemesterWeek;
+    private readonly ModuleSemesterWeekDTO _moduleSemesterWeek;
 
     public int WeekNumber => _moduleSemesterWeek.WeekNumber;
-    public DateOnly StartDate => _moduleSemesterWeek.StartDate;
-    public DateOnly EndDate => _moduleSemesterWeek.EndDate;
+    public DateOnly? StartDate => _moduleSemesterWeek.StartDate;
+    public DateOnly? EndDate => _moduleSemesterWeek.EndDate;
     public int RemainingSelfStudyHours => _moduleSemesterWeek.RemainingSelfStudyHours;
 
-    public ModuleSemesterWeekListingItemViewModel(ModuleSemesterWeek moduleSemesterWeek)
+    public ModuleSemesterWeekListingItemViewModel(ModuleSemesterWeekDTO moduleSemesterWeek)
     {
         _moduleSemesterWeek = moduleSemesterWeek;
     }

@@ -3,11 +3,13 @@ using StudyTimeManager.Domain.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
-using StudyTimeManager.Domain.Services.Contracts;
+using StudyTimeManager.Services.Contracts;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using StudyTimeManager.WPF.UI.Messages;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.Configuration;
+using Shared.DTOs.Semester;
 
 namespace StudyTimeManager.WPF.UI.ViewModels;
 /// <summary>
@@ -44,7 +46,8 @@ public partial class CreateSemesterViewModel : ObservableValidator
     /// </summary>
     public ISnackbarMessageQueue MessageQueue { get; }
 
-    public CreateSemesterViewModel(IServiceManager service, ISnackbarMessageQueue messageQueue)
+    public CreateSemesterViewModel(IServiceManager service, 
+        ISnackbarMessageQueue messageQueue)
     {
         MessageQueue = messageQueue;
         _startDate = DateTime.Now;
@@ -58,19 +61,20 @@ public partial class CreateSemesterViewModel : ObservableValidator
     private void CreateSemester()
     {
         //instantiate a new semester with the values of the properties and try create it
-        Semester semester = new Semester()
+        SemesterForCreationDTO semester = new()
         {
             NumberOfWeeks = NumberOfWeeks,
             StartDate = DateOnly.FromDateTime(StartDate)
         };
-        bool successful = _service.SemesterService.CreateSemester(semester);
+        SemesterDTO semesterDTO = _service.SemesterService.CreateSemester(semester);
+       
 
         //if semester has been successfully created
-        //create and send a message on the successful creation of the semester.
+        //create and send a message containing the Id of the semester.
         //add a message to the message queue to notify user that the operation has been successful
-        if (successful)
+        if (semesterDTO!=null)
         {
-            SemesterCreatedMessage message = new SemesterCreatedMessage(successful);
+            SemesterCreatedMessage message = new SemesterCreatedMessage(semesterDTO);
             WeakReferenceMessenger.Default.Send(message);
 
             MessageQueue.Enqueue("Semester successfully created.", "UNDO", () => UndoCreate());
@@ -82,7 +86,8 @@ public partial class CreateSemesterViewModel : ObservableValidator
     /// </summary>
     private void UndoCreate()
     {
-        SemesterCreatedMessage message = new SemesterCreatedMessage(false);
-        WeakReferenceMessenger.Default.Send(message);
+
+        //SemesterCreatedMessage message = new SemesterCreatedMessage(false);
+        //WeakReferenceMessenger.Default.Send(message);
     }
 }

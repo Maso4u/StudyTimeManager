@@ -1,7 +1,10 @@
-﻿using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services.Contracts;
+﻿using AutoMapper;
+using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository;
+using StudyTimeManager.Repository.Contracts;
+using StudyTimeManager.Services.Contracts;
 
-namespace StudyTimeManager.Domain.Services;
+namespace StudyTimeManager.Services;
 ///<inheritdoc cref="IServiceManager"/>
 public class ServiceManager : IServiceManager
 {
@@ -14,12 +17,13 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<IStudySessionService> _studySessionService;
     private readonly Lazy<ISemesterService> _semesterService;
 
-    public ServiceManager(Semester semester)
+    public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
     {
-        _moduleService = new Lazy<IModuleService>(() => new ModuleService(semester));
-        _moduleSemesterWeekService = new Lazy<IModuleSemesterWeekService>(() => new ModuleSemesterWeekService(semester));
-        _studySessionService = new Lazy<IStudySessionService>(() => new StudySessionService(semester));
-        _semesterService = new Lazy<ISemesterService>(() => new SemesterService(semester));
+        _moduleService = new Lazy<IModuleService>(() => new ModuleService(repositoryManager,mapper));
+        _moduleSemesterWeekService = new Lazy<IModuleSemesterWeekService>(() => new ModuleSemesterWeekService(repositoryManager,mapper));
+        _studySessionService = new Lazy<IStudySessionService>(() => new StudySessionService(repositoryManager,mapper));
+        _semesterService = new Lazy<ISemesterService>(
+            () => new SemesterService(repositoryManager,mapper));
     }
 
     public IModuleService ModuleService => _moduleService.Value;

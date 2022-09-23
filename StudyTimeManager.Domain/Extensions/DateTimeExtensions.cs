@@ -9,9 +9,9 @@ namespace StudyTimeManager.Domain.Extensions
             return date >= startDate && date <= endDate;
         }
 
-        public static DateTime ToDateTime(this DateOnly date)
+        public static DateTime ToDateTime(this DateOnly? date)
         {
-           return date.ToDateTime(TimeOnly.MinValue);
+           return (DateTime)(date?.ToDateTime(TimeOnly.MinValue));
         }
     }
 }

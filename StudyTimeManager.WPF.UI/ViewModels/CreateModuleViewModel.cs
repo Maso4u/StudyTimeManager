@@ -2,8 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MaterialDesignThemes.Wpf;
+using Shared.DTOs.Module;
+using Shared.DTOs.Semester;
 using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services.Contracts;
+using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -53,7 +55,8 @@ public partial class CreateModuleViewModel : ObservableValidator,
     [ObservableProperty]
     public bool _canCreate = false;
 
-    private Module module;
+    private ModuleForCreationDTO module;
+    private SemesterDTO semester;
 
     private readonly IServiceManager _service;
     public ISnackbarMessageQueue MessageQueue { get; }
@@ -71,31 +74,42 @@ public partial class CreateModuleViewModel : ObservableValidator,
     private void CreateModule()
     {
         //instantiate a new module with the values of the properties and try to create it 
-        module = new Module()
+        module = new ModuleForCreationDTO()
         {
             Code = ModuleCode,
             Name = ModuleName,
             NumberOfCredits = NumberOfCredits,
             ClassHoursPerWeek = ClassHoursPerWeek
         };
-        bool successful = _service.ModuleService.CreateModule(module);
+        bool moduleExists = _service.ModuleService.GetModule(semester.Id,ModuleCode) != null;
+
+        if (moduleExists)
+        {
+            MessageQueue.Enqueue(
+                "This module has already been added for this semester.");
+            return;
+        }
+
+        ModuleDTO? moduleDTO = _service.ModuleService.CreateModule(semester, module, false);
 
         //if the module was successfully created then create semester weeks for the module
         //and send message that it has been created. 
         //Add message to the message queue to notify users
-        if (successful)
+        if (moduleDTO != null)
         {
-            _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(ModuleCode);
-            SendMessage(module);
-
-            MessageQueue.Enqueue("Module successfully created.", "UNDO", () => UndoCreate());
+            _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(moduleDTO,semester);
+            SendMessage(moduleDTO);
+             
+            MessageQueue.Enqueue(
+                "Module successfully created.",
+                "UNDO", () => UndoCreate(moduleDTO));
         }
 
     }
     /// <summary>
     /// Reverts the creation of a module
     /// </summary>
-    private void UndoCreate()
+    private void UndoCreate(ModuleDTO module)
     {
         //delete the module
         bool isDeleted = _service.ModuleService.DeleteModule(ModuleCode);
@@ -113,7 +127,7 @@ public partial class CreateModuleViewModel : ObservableValidator,
     /// Sends a message on the creation of a module.
     /// </summary>
     /// <param name="module">Module to be created.</param>
-    private void SendMessage(Module module)
+    private void SendMessage(ModuleDTO module)
     {
         ModuleCreatedMessage message = new ModuleCreatedMessage(module);
         WeakReferenceMessenger.Default.Send(message);
@@ -121,6 +135,7 @@ public partial class CreateModuleViewModel : ObservableValidator,
 
     public void Receive(SemesterCreatedMessage message)
     {
-        CanCreate = message.Value;
+        CanCreate = true ;
+        semester = message.Value;
     }
 }

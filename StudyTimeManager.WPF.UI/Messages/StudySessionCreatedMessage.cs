@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using StudyTimeManager.Domain.Models;
+using System;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    public class StudySessionCreatedMessage : ValueChangedMessage<string>
+    public class StudySessionCreatedMessage : ValueChangedMessage<Guid>
     {
-        public StudySessionCreatedMessage(string value) : base(value)
+        public StudySessionCreatedMessage(Guid value) : base(value)
         {
         }
     }

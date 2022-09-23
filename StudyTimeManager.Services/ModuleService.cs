@@ -1,45 +1,42 @@
-﻿using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services.Contracts;
+﻿using AutoMapper;
+using Shared.DTOs.Module;
+using Shared.DTOs.Semester;
+using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository.Contracts;
+using StudyTimeManager.Services.Contracts;
 
-namespace StudyTimeManager.Domain.Services;
+namespace StudyTimeManager.Services;
 ///<inheritdoc cref="IModuleService"/>
 public class ModuleService : IModuleService
 {
+
+    private readonly IRepositoryManager _repository;
+    private readonly IMapper _mapper;
     private readonly Semester _semester;
 
-    public ModuleService(Semester semester)
+    public ModuleService(IRepositoryManager repository, IMapper mapper)
     {
-        _semester = semester;
+        _repository = repository;
+        _mapper = mapper;
     }
 
-    public bool CreateModule(Module module)
+    public ModuleDTO? CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges)
     {
-        Module foundModule = null;
-
-        ///check if there are any modules in a module.
-        ///if there are check if there is one with the same code 
-        ///as the module in the parameter and assign it to the foundModule variable 
-        if (_semester.Modules.Count > 0)
-        {
-            foundModule = _semester[module.Code];
-        }
-
-        ///if the foundModule is not null anymore then
-        ///that means the module already exists and therefore this method should return false
-        if (foundModule != null)
-        {
-            return false;
-        }
+        var moduleEntity = _mapper.Map<Module>(module);
 
         ///assign calculated requred weekly self-study hours and 
         ///assign to property of the module to be created
-        module.RequiredWeeklySelfStudyHours = CalculateRequiredWeeklySelfStudyHours(module);
-        
+        moduleEntity.RequiredWeeklySelfStudyHours = 
+            CalculateRequiredWeeklySelfStudyHours(
+                module.NumberOfCredits,semester.NumberOfWeeks,module.ClassHoursPerWeek);
+
         ///Add module to collection of modules in semester and 
         ///check if it was successfully added with the contains method,
         ///return the result of that check
-        _semester.Modules.Add(module);
-        return _semester.Modules.Contains(module);
+        _repository.Module.CreateModuleForSemester(semester.Id, moduleEntity);
+        _repository.Save();
+
+        return _mapper.Map<ModuleDTO>(moduleEntity);
     }
 
     public bool DeleteModule(string moduleCode)
@@ -49,7 +46,12 @@ public class ModuleService : IModuleService
         return _semester.Modules.Remove(_semester[moduleCode]);
     }
 
-    public Module GetModule(string moduleCode) => _semester[moduleCode];
+    public ModuleDTO GetModule(Guid semesterId,string moduleCode)
+    {
+        Module moduleEntity = _repository
+            .Module.GetModuleByCode(semesterId, moduleCode, false);
+        return _mapper.Map<ModuleDTO>(moduleEntity);
+    }
 
     public ICollection<Module> GetModules() => _semester.Modules;
 
@@ -67,6 +69,6 @@ public class ModuleService : IModuleService
     /// </summary>
     /// <param name="module">The module for which the self-study hours are being calculated for</param>
     /// <returns>The hours of weekly self-study hours.</returns>
-    private int CalculateRequiredWeeklySelfStudyHours(Module module) =>
-        ((module.NumberOfCredits * 10) / _semester.NumberOfWeeks) - module.ClassHoursPerWeek;
+    private int CalculateRequiredWeeklySelfStudyHours(int credits, int weeks, int classHoursPerWeek) =>
+        ((credits * 10) / weeks) - classHoursPerWeek;
 }

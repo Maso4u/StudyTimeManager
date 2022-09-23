@@ -1,11 +1,19 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudyTimeManager.Repository;
+using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services;
-using StudyTimeManager.Domain.Services.Contracts;
+using StudyTimeManager.Services;
+using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.ViewModels;
+using System.Configuration;
+using System.IO;
 using System.Windows;
+using StudyTimeManager.WPF.UI.ContextFactory;
+using AutoMapper;
 
 namespace StudyTimeManager.WPF.UI
 {
@@ -21,16 +29,24 @@ namespace StudyTimeManager.WPF.UI
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<Semester>();
+                    services.AddSingleton<IConfiguration>(AddConfiguration());
 
+                    services.AddDbContext<RepositoryContext>((services,opt) =>
+                    {
+                        IConfiguration conf = services.GetRequiredService<IConfiguration>();
+                        string connectionString = conf.GetConnectionString("sqlConnection");
+                        opt.UseSqlite(connectionString);
+                    });
+
+                    services.AddAutoMapper(typeof(MappingProfile));
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
-                    //services to be injected 
-                    services.AddSingleton<IServiceManager, ServiceManager>();
-                    services.AddSingleton<IModuleService, ModuleService>();
-                    services.AddSingleton<IModuleSemesterWeekService, ModuleSemesterWeekService>();
-                    services.AddSingleton<IStudySessionService, StudySessionService>();
+                    //Repository
+                    services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+                    //services to be injected 
+                    services.AddScoped<IServiceManager, ServiceManager>();
+                    
                     //snackbar message queue to be injected
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
@@ -50,11 +66,12 @@ namespace StudyTimeManager.WPF.UI
 
                 }).Build();
 
-
         }
         protected override void OnStartup(StartupEventArgs e)
         {
             _host.Start();
+
+            MigrateDatabase();
 
             MainWindow = _host.Services.GetService<MainWindow>();
             MainWindow.Show();
@@ -62,11 +79,39 @@ namespace StudyTimeManager.WPF.UI
             base.OnStartup(e);
         }
 
+        private IConfiguration AddConfiguration()
+        {
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+#if DEBUG
+            builder.AddJsonFile("appsettings.Development.json", true, true);
+#else
+            builder.AddJsonFile("appsettings.Production.json", true, true);
+#endif
+            return builder.Build();
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
             _host.StopAsync();
             _host.Dispose();
             base.OnExit(e);
+        }
+
+        private void MigrateDatabase()
+        {
+            IConfiguration configuration = _host.Services.GetService<IConfiguration>();
+            string? connectionString = configuration.GetConnectionString("sqlConnection");
+
+            DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseSqlite(connectionString, 
+                b => b.MigrationsAssembly("StudyTimeManager.WPF.UI"))
+                .Options;
+
+            RepositoryContext repositoryContext = new RepositoryContext(options);
+            repositoryContext.Database.Migrate();
         }
     }
 }

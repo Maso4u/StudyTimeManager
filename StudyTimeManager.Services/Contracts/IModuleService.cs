@@ -1,6 +1,8 @@
-﻿using StudyTimeManager.Domain.Models;
+﻿using Shared.DTOs.Module;
+using Shared.DTOs.Semester;
+using StudyTimeManager.Domain.Models;
 
-namespace StudyTimeManager.Domain.Services.Contracts;
+namespace StudyTimeManager.Services.Contracts;
 /// <summary>
 /// Handles CRUD operations related to Modules for a semester
 /// </summary>
@@ -14,7 +16,7 @@ public interface IModuleService
     /// <see langword="true"/> if module was successfully created,
     /// <see langword="false"/> if otherwise
     /// </returns>
-    bool CreateModule(Module module);
+    ModuleDTO? CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges);
 
     /// <summary>
     /// Deletes a module from the collection of modules found in a semester
@@ -39,7 +41,7 @@ public interface IModuleService
     /// </summary>
     /// <param name="moduleCode">The module code for the <see cref="Module"/> to retrieve</param>
     /// <returns>A module with a code equal to <paramref name="moduleCode"/></returns>
-    Module GetModule(string moduleCode);
+    ModuleDTO? GetModule(Guid semesterId,string moduleCode);
 
     /// <summary>
     /// Retrieves the collection of a semester

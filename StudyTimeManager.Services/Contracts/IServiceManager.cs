@@ -1,4 +1,4 @@
-﻿namespace StudyTimeManager.Domain.Services.Contracts;
+﻿namespace StudyTimeManager.Services.Contracts;
 /// <summary>
 /// Creates instances of service user classes and registers them in the DI container.
 /// </summary>

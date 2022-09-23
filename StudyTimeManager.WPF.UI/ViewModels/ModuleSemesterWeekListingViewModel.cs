@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Shared.DTOs.ModuleSemesterWeek;
 using StudyTimeManager.Domain.Models;
-using StudyTimeManager.Domain.Services.Contracts;
+using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,8 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
     public ModuleSemesterWeekListingViewModel(IServiceManager service)
     {
         _service = service;
-        _moduleSemesterWeekListingItems = new ObservableCollection<ModuleSemesterWeekListingItemViewModel>();
+        _moduleSemesterWeekListingItems = 
+            new ObservableCollection<ModuleSemesterWeekListingItemViewModel>();
         CanDelete = false;
         RegisterToMessages();
     }
@@ -71,8 +73,8 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
                 RequiredWeeklySelfStudyHours = Module.RequiredWeeklyStudyHours
             };
             //create and send a module deleted module message 
-            ModuleDeletedMessage message = new ModuleDeletedMessage(module);
-            WeakReferenceMessenger.Default.Send(message);
+            //ModuleDeletedMessage message = new ModuleDeletedMessage(module);
+            //WeakReferenceMessenger.Default.Send(message);
 
             //clear the observable collection of module semester weeks
             //set value to module semester listing item viewmodel to null
@@ -90,7 +92,7 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
     {
         //clear the current list of semester week items
         _moduleSemesterWeekListingItems.Clear();
-        if (Module != null)
+        if (Module is null)
         {
             //if module listing item viewModel is not null
             //(meaning there is a module listing item viewmodel currently selected
@@ -99,17 +101,17 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
             //set can delete to true
             //and get semester weeks for the module with a code equal to
             //that of the module listing item viewmodel's code
-            CanDelete = true;
-            ICollection<ModuleSemesterWeek>? semesterWeeks = _service.ModuleSemesterWeekService
-                .GetModuleSemesterWeeksForAModule(Module.ModuleCode);
-            
-            //loop through the retrieved semester weeks of the module 
-            //and add semester week listing item viewmodel of the current semester week 
-            foreach (var semesterWeek in semesterWeeks)
-            {
-                _moduleSemesterWeekListingItems
-                    .Add(new ModuleSemesterWeekListingItemViewModel(semesterWeek));
-            }
+            return;
+        }
+
+        CanDelete = true;
+        IEnumerable<ModuleSemesterWeekDTO>? semesterWeeks = _service.ModuleSemesterWeekService
+            .GetModuleSemesterWeeksForAModule(Module.Id);
+
+        foreach (var semesterWeek in semesterWeeks)
+        {
+            _moduleSemesterWeekListingItems
+                .Add(new ModuleSemesterWeekListingItemViewModel(semesterWeek));
         }
     }
 
@@ -134,29 +136,26 @@ public partial class ModuleSemesterWeekListingViewModel : ObservableObject,
 
     public void Receive(StudySessionCreatedMessage message)
     {
-        //if module listing item viewmodel is not null
-        //and the code is equal to the value of the message 
-        //then update the the listing 
-        //(this means that the study session that has been created
-        //has been created for the module selected in the module listing viewmodel)
-        if (Module != null)
+        if (Module is null)
         {
-            if (Module.ModuleCode.Equals(message.Value))
-            {
-                UpdateListing();
-            }
+            return;
         }
-        
+
+        if (Module.Id.Equals(message.Value))
+        {
+            UpdateListing();
+        }
     }
 
     public void Receive(StudySessionRemovedMessage message)
     {
-        if (Module != null)
+        if (Module is null)
         {
-            if (Module.ModuleCode.Equals(message.Value))
-            {
-                UpdateListing();
-            }
+            return;
+        }
+        if (Module.Id.Equals(message.Value))
+        {
+            UpdateListing();
         }
     }
 }
