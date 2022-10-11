@@ -14,8 +14,8 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         private readonly ModuleSemesterWeekDTO _moduleSemesterWeek;
 
         public int WeekNumber => _moduleSemesterWeek.WeekNumber;
-        public DateTime? StartDate => _moduleSemesterWeek.StartDate;
-        public DateTime? EndDate => _moduleSemesterWeek.EndDate;
+        public string? StartDate => _moduleSemesterWeek.StartDate.ToShortDateString();
+        public string? EndDate => _moduleSemesterWeek.EndDate.ToShortDateString();
         public int RemainingSelfStudyHours => _moduleSemesterWeek.RemainingSelfStudyHours;
 
         public ModuleSemesterWeekListingItemViewModel(ModuleSemesterWeekDTO moduleSemesterWeek)

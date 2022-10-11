@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
+             xmlns:converters="clr-namespace:StudyTimeManager.WPF.UI.Converters"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              FontFamily="{StaticResource MontserratRegular}">
+    <UserControl.Resources>
+        <converters:DateConverter x:Key="dateConverter"/>
+    </UserControl.Resources>
     <materialDesign:Card 
         Padding="15"
         Margin="5"
