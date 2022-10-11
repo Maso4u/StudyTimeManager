@@ -1,8 +1,10 @@
-﻿namespace Shared.DTOs.StudySession
+﻿using System;
+
+namespace Shared.DTOs.StudySession
 {
     public abstract record StudySessionForManipulationDTO
     {
-        public DateOnly Date { get; init; }
+        public DateTime Date { get; init; }
         public int HoursSpent { get; init; }
     }
 }

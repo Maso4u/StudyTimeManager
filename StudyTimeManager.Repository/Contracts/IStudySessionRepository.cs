@@ -5,5 +5,6 @@ namespace StudyTimeManager.Repository.Contracts
     public interface IStudySessionRepository
     {
         void CreateStudySession(StudySession studySession);
+        void DeleteStudySession(StudySession studySession);
     }
 }

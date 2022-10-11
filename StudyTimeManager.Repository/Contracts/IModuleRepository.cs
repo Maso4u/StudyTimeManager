@@ -1,4 +1,5 @@
 ﻿using StudyTimeManager.Domain.Models;
+using System;
 
 namespace StudyTimeManager.Repository.Contracts
 {

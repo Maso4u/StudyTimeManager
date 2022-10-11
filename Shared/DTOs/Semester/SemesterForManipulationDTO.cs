@@ -1,7 +1,11 @@
-﻿namespace Shared.DTOs.Semester;
+﻿using System;
 
-public abstract record SemesterForManipulationDTO
+namespace Shared.DTOs.Semester
 {
-    public int NumberOfWeeks { get; init; }
-    public DateOnly StartDate { get; init; }
+
+    public abstract record SemesterForManipulationDTO
+    {
+        public int NumberOfWeeks { get; init; }
+        public DateTime StartDate { get; init; }
+    }
 }

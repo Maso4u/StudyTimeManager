@@ -17,8 +17,8 @@ namespace StudyTimeManager.WPF.UI.Migrations
                 {
                     SemesterId = table.Column<Guid>(type: "TEXT", nullable: false),
                     NumberOfWeeks = table.Column<int>(type: "INTEGER", nullable: false),
-                    StartDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "TEXT", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,8 +53,8 @@ namespace StudyTimeManager.WPF.UI.Migrations
                 columns: table => new
                 {
                     ModuleSemesterWeekId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    StartDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    EndDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     WeekNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     RemainingSelfStudyHours = table.Column<int>(type: "INTEGER", nullable: false),
                     ModuleId = table.Column<Guid>(type: "TEXT", nullable: false)
@@ -75,7 +75,7 @@ namespace StudyTimeManager.WPF.UI.Migrations
                 columns: table => new
                 {
                     StudySessionId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     HoursSpent = table.Column<int>(type: "INTEGER", nullable: false),
                     ModuleSemesterWeekId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },

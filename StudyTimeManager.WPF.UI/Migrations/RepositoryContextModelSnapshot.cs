@@ -56,10 +56,10 @@ namespace StudyTimeManager.WPF.UI.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("TEXT") 
                         .HasColumnName("ModuleSemesterWeekId");
 
-                    b.Property<DateOnly?>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -69,7 +69,7 @@ namespace StudyTimeManager.WPF.UI.Migrations
                     b.Property<int>("RemainingSelfStudyHours")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -90,14 +90,14 @@ namespace StudyTimeManager.WPF.UI.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("SemesterId");
 
-                    b.Property<DateOnly?>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("NumberOfWeeks")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly?>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -113,7 +113,7 @@ namespace StudyTimeManager.WPF.UI.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("StudySessionId");
 
-                    b.Property<DateOnly?>("Date")
+                    b.Property<DateTime?>("Date")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

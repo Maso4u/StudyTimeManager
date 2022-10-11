@@ -1,7 +1,11 @@
-﻿namespace Shared.DTOs.StudySession;
-public record StudySessionDTO
+﻿using System;
+
+namespace Shared.DTOs.StudySession
 {
-    public Guid Id { get; init; }
-    public DateOnly? Date { get; init; }
-    public int HoursSpent { get; init; }
+    public record StudySessionDTO
+    {
+        public Guid Id { get; init; }
+        public DateTime Date { get; init; }
+        public int HoursSpent { get; init; }
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyTimeManager.Repository;
 using StudyTimeManager.Repository.Contracts;
+using System;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Repository

@@ -5,7 +5,8 @@ using Shared.DTOs.Semester;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
-using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace StudyTimeManager.Services
@@ -13,7 +14,6 @@ namespace StudyTimeManager.Services
     ///<inheritdoc cref="IModuleSemesterWeekService"/>
     public class ModuleSemesterWeekService : IModuleSemesterWeekService
     {
-        private readonly Semester _semester;
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
 
@@ -27,7 +27,7 @@ namespace StudyTimeManager.Services
         {
             List<ModuleSemesterWeek> moduleSemesterWeeks = new List<ModuleSemesterWeek>();
             Calendar calendar = CultureInfo.InvariantCulture.Calendar;
-            DateTime firstDateOfFirstWeek = semester.StartDate.ToDateTime(TimeOnly.MinValue);
+            DateTime firstDateOfFirstWeek = semester.StartDate;
             int week = 0;
 
             while (week < semester.NumberOfWeeks)
@@ -38,8 +38,8 @@ namespace StudyTimeManager.Services
 
                 ModuleSemesterWeek moduleSemesterWeek = new()
                 {
-                    StartDate = DateOnly.FromDateTime(firstDateOfWeek),
-                    EndDate = DateOnly.FromDateTime(lastDateOfWeek),
+                    StartDate = firstDateOfWeek,
+                    EndDate = lastDateOfWeek,
                     WeekNumber = week+1,
                     RemainingSelfStudyHours = module.RequiredWeeklySelfStudyHours,
                     ModuleId = module.Id

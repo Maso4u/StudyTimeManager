@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using System;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    public class StudySessionRemovedMessage : ValueChangedMessage<string>
+    public class StudySessionRemovedMessage : ValueChangedMessage<Guid>
     {
-        public StudySessionRemovedMessage(string value) : base(value)
+        public StudySessionRemovedMessage(Guid moduleId) : base(moduleId)
         {
         }
     }

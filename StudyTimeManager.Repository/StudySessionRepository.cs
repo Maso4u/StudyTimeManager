@@ -15,5 +15,10 @@ namespace StudyTimeManager.Repository
         {
             Create(studySession);
         }
+
+        public void DeleteStudySession(StudySession studySession)
+        {
+            Delete(studySession);
+        }
     }
 }

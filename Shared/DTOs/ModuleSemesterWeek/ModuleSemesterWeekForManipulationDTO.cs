@@ -1,8 +1,12 @@
-﻿namespace Shared.DTOs.ModuleSemesterWeek;
-public abstract record ModuleSemesterWeekForManipulationDTO
+﻿using System;
+
+namespace Shared.DTOs.ModuleSemesterWeek
 {
-    public DateOnly? StartDate { get; set; }
-    public DateOnly? EndDate { get; set; }
-    public int WeekNumber { get; set; }
-    public int RemainingSelfStudyHours { get; set; }
+    public abstract record ModuleSemesterWeekForManipulationDTO
+    {
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int WeekNumber { get; set; }
+        public int RemainingSelfStudyHours { get; set; }
+    }
 }

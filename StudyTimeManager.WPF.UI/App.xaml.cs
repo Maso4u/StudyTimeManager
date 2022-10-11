@@ -1,19 +1,17 @@
 ﻿using MaterialDesignThemes.Wpf;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StudyTimeManager.Repository;
 using StudyTimeManager.Repository.Contracts;
-using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Services;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.ViewModels;
-using System.Configuration;
 using System.IO;
 using System.Windows;
 using StudyTimeManager.WPF.UI.ContextFactory;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudyTimeManager.WPF.UI
 {
@@ -74,7 +72,7 @@ namespace StudyTimeManager.WPF.UI
             MigrateDatabase();
 
             MainWindow = _host.Services.GetService<MainWindow>();
-            MainWindow.Show();
+            MainWindow?.Show();
 
             base.OnStartup(e);
         }

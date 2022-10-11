@@ -1,4 +1,7 @@
-﻿namespace Shared.DTOs.Module;
-public record ModuleForCreationDTO:ModuleForManipulationDTO
+﻿namespace Shared.DTOs.Module
 {
+    public record ModuleForCreationDTO : ModuleForManipulationDTO
+    {
+
+    }
 }

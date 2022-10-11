@@ -1,9 +1,11 @@
 ﻿using Repository;
 using Shared.DTOs.Module;
 using Shared.DTOs.ModuleSemesterWeek;
-using Shared.Extensions;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StudyTimeManager.Repository
 {
@@ -23,7 +25,7 @@ namespace StudyTimeManager.Repository
             }
         }
 
-        public ModuleSemesterWeek GetModuleSemesterWeekByDate(Guid moduleId, DateOnly date, bool trackChanges)
+        public ModuleSemesterWeek GetModuleSemesterWeekByDate(Guid moduleId, DateTime date, bool trackChanges)
         {
             return FindByCondition(m =>
             m.ModuleId.Equals(moduleId) && date >= m.StartDate && date <= m.EndDate, trackChanges)

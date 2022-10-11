@@ -2,30 +2,35 @@
 using Repository;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace StudyTimeManager.Repository;
-internal sealed class SemesterRepository : RepositoryBase<Semester>, ISemesterRepository
+namespace StudyTimeManager.Repository
 {
-    public SemesterRepository(RepositoryContext repositoryContext)
-        : base(repositoryContext)
+    internal sealed class SemesterRepository : RepositoryBase<Semester>, ISemesterRepository
     {
-    }
+        public SemesterRepository(RepositoryContext repositoryContext)
+            : base(repositoryContext)
+        {
+        }
 
-    public void CreateSemester(Semester semester)
-    {
-        Create(semester);
-    }
+        public void CreateSemester(Semester semester)
+        {
+            Create(semester);
+        }
 
-    public IEnumerable<Semester> GetAllSemesters(bool trackChanges)
-    {
-        return FindAll(trackChanges)
-            .OrderBy(s => s.StartDate)
-            .ToList();
-    }
+        public IEnumerable<Semester> GetAllSemesters(bool trackChanges)
+        {
+            return FindAll(trackChanges)
+                .OrderBy(s => s.StartDate)
+                .ToList();
+        }
 
-    public Semester GetSemester(Guid semesterId, bool trackChanges)
-    {
-        return FindByCondition(e =>
-        e.Id.Equals(semesterId), trackChanges).SingleOrDefault();
+        public Semester GetSemester(Guid semesterId, bool trackChanges)
+        {
+            return FindByCondition(e =>
+            e.Id.Equals(semesterId), trackChanges).SingleOrDefault();
+        }
     }
 }

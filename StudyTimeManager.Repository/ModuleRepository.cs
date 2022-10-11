@@ -2,6 +2,8 @@
 using Shared.DTOs.Module;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
+using System;
+using System.Linq;
 
 namespace StudyTimeManager.Repository
 {

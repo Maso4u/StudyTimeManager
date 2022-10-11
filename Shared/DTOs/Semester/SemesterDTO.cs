@@ -1,8 +1,12 @@
-﻿namespace Shared.DTOs.Semester;
-public record SemesterDTO
+﻿using System;
+
+namespace Shared.DTOs.Semester
 {
-    public Guid Id { get; init; }
-    public int NumberOfWeeks { get; init; }
-    public DateOnly StartDate { get; init; }
-    public DateOnly EndDate { get; init; }
+    public record SemesterDTO
+    {
+        public Guid Id { get; init; }
+        public int NumberOfWeeks { get; init; }
+        public DateTime StartDate { get; init; }
+        public DateTime EndDate { get; init; }
+    }
 }
