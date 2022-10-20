@@ -46,11 +46,17 @@ namespace StudyTimeManager.Services
 
             semesterEntity.EndDate = CalculateSemesterLastDay(semester.StartDate, semester.NumberOfWeeks);
             _repository.Semester.CreateSemester(semesterEntity);
-            _repository.Save();
+            //_repository.Save();
 
             var semesterToReturn = _mapper.Map<SemesterDTO>(semesterEntity);
 
             return semesterToReturn;
+        }
+
+        public void DeleteSemester(Guid Id)
+        {
+            Semester semester = _repository.Semester.GetSemester(Id, false);
+            _repository.Semester.DeleteSemester(semester);
         }
 
         public SemesterDTO GetSemester(Guid Id, bool trackChanges)

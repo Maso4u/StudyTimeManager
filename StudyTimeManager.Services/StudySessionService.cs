@@ -6,6 +6,7 @@ using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
 using System;
 using System.Data;
+using System.Reflection;
 
 namespace StudyTimeManager.Services
 {
@@ -20,10 +21,11 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public StudySessionDTO? CreateStudySession(Guid moduleId, StudySessionForCreationDTO studySession)
+        public StudySessionDTO? 
+            CreateStudySession (Guid moduleId, StudySessionForCreationDTO studySession)
         {
             ModuleSemesterWeek moduleSemesterWeek = _repository.ModuleSemesterWeek
-                .GetModuleSemesterWeekByDate(moduleId, studySession.Date, true);
+                .GetModuleSemesterWeekByDate(moduleId, studySession.Date, false);
 
             if (moduleSemesterWeek is null)
             {
@@ -37,11 +39,12 @@ namespace StudyTimeManager.Services
                 StudySession studySessionEntity = _mapper.Map<StudySession>(studySession);
                 studySessionEntity.ModuleSemesterWeekId = moduleSemesterWeek.Id;
                 _repository.StudySession.CreateStudySession(studySessionEntity);
-
-                _repository.Save();
+                _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
+                //_service.ModuleSemesterWeekService.UpdateModuleSemesterWeekForAModule(message.Value.Item2);
+                //_repository.Save();
 
                 StudySessionDTO studySessionCreated = _mapper.Map<StudySessionDTO>(studySessionEntity);
-                return studySessionCreated;
+                return (studySessionCreated);
             }
             return null;
         }
@@ -55,10 +58,11 @@ namespace StudyTimeManager.Services
             {
                 return;
             }
+
             StudySession studySession = _mapper.Map<StudySession>(studySessionDTO);
             moduleSemesterWeek.RemainingSelfStudyHours += studySessionDTO.HoursSpent;
             _repository.StudySession.DeleteStudySession(studySession);
-            _repository.Save();
+            _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
         }
 
         /// <summary>

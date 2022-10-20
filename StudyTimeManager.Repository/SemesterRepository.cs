@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repository;
 using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace StudyTimeManager.Repository
 {
     internal sealed class SemesterRepository : RepositoryBase<Semester>, ISemesterRepository
     {
-        public SemesterRepository(RepositoryContext repositoryContext)
+        public SemesterRepository(RepositoryContextFactory repositoryContext)
             : base(repositoryContext)
         {
         }
@@ -18,6 +19,11 @@ namespace StudyTimeManager.Repository
         public void CreateSemester(Semester semester)
         {
             Create(semester);
+        }
+
+        public void DeleteSemester(Semester semester)
+        {
+            Delete(semester);
         }
 
         public IEnumerable<Semester> GetAllSemesters(bool trackChanges)

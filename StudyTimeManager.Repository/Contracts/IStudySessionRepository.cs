@@ -6,5 +6,6 @@ namespace StudyTimeManager.Repository.Contracts
     {
         void CreateStudySession(StudySession studySession);
         void DeleteStudySession(StudySession studySession);
+        void UpdateStudySession(StudySession studySession);
     }
 }

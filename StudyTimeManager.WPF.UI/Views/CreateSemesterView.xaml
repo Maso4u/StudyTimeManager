@@ -72,8 +72,9 @@
                 </TextBox>
             </Grid>
 
-            <!--Button-->
-            <Button
+            <Grid Grid.Row="2">
+                <!--Button-->
+                <Button
                 Command="{Binding CreateSemesterCommand}"
                 IsEnabled="{Binding Path=CanCreate, UpdateSourceTrigger=PropertyChanged}"
                 Grid.Row="2"
@@ -84,34 +85,37 @@
                 materialDesign:ButtonAssist.CornerRadius="5"
                 Background="{StaticResource ButtonBackgroundBrush}"
                 BorderBrush="{x:Null}">
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20*" />
-                            <ColumnDefinition Width="3*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.Resources>
-                            <Style TargetType="materialDesign:PackIcon">
-                                <Setter Property="Height"
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Setter Property="Height"
                                                 Value="25" />
-                                <Setter Property="Width"
+                                    <Setter Property="Width"
                                                 Value="25" />
-                            </Style>
-                        </Grid.Resources>
-                        <materialDesign:PackIcon Kind="ChevronRightCircle"
+                                </Style>
+                            </Grid.Resources>
+                            <materialDesign:PackIcon Kind="ChevronRightCircle"
                                                          Grid.Column="1"
                                                          VerticalAlignment="Stretch"
                                                          HorizontalAlignment="Center" />
 
-                        <TextBlock Text="Create Semester"
+                            <TextBlock Text="Create Semester"
                                            Grid.Column="0"
                                            Margin="10 0"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" 
                                            FontFamily="{StaticResource MontserratMedium}"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                
+            </Grid>
+            
         </Grid>
     </materialDesign:Card>
 </UserControl>

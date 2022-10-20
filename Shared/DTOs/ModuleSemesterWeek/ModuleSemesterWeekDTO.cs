@@ -9,5 +9,6 @@ namespace Shared.DTOs.ModuleSemesterWeek
         public DateTime EndDate { get; init; }
         public int WeekNumber { get; init; }
         public int RemainingSelfStudyHours { get; init; }
+        public Guid ModuleId { get; init; }
     }
 }

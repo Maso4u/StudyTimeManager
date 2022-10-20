@@ -1,46 +1,73 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyTimeManager.Repository;
 using StudyTimeManager.Repository.Contracts;
+using StudyTimeManager.Repository.ContextFactory;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Repository
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        protected RepositoryContext RepositoryContext;
+        protected RepositoryContextFactory _repositoryContextFactory;
 
-        protected RepositoryBase(RepositoryContext repositoryContext)
+        protected RepositoryBase(RepositoryContextFactory repositoryContext)
         {
-            RepositoryContext = repositoryContext;
+            _repositoryContextFactory = repositoryContext;
         }
 
         public void Create(T entity)
         {
-            RepositoryContext.Set<T>().Add(entity);
+            using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
+            {
+                context.Set<T>().Add(entity);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(T entity)
         {
-            RepositoryContext.Set<T>().Remove(entity);
+            using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
+            {
+                context.Set<T>().Remove(entity);
+                context.SaveChanges();
+            }
         }
 
-        public IQueryable<T> FindAll(bool trackChanges)
+        public IEnumerable<T> FindAll(bool trackChanges)
         {
-            return !trackChanges ? RepositoryContext.Set<T>()
-                .AsNoTracking() : RepositoryContext.Set<T>();
+            using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
+            {
+                if (trackChanges)
+                {
+                    return context.Set<T>().AsNoTracking().ToList();
+                }
+                return context.Set<T>().ToList();
+            }
         }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
+        public IEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
         {
-            return !trackChanges ? RepositoryContext.Set<T>().Where(expression).AsNoTracking() : 
-                RepositoryContext.Set<T>().Where(expression);
+            using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
+            {
+                if (trackChanges)
+                {
+                    return context.Set<T>().Where(expression).ToList(); ;
+                }
+                var response =context.Set<T>().Where(expression).AsNoTracking();
+                return response.ToList();
+            }
         }
 
         public void Update(T entity)
         {
-            RepositoryContext.Set<T>().Update(entity);
+            using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
+            {
+                context.Set<T>().Update(entity);
+                context.SaveChanges();
+            }
         }
     }
 }

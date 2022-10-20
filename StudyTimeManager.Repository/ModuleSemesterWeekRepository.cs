@@ -2,6 +2,7 @@
 using Shared.DTOs.Module;
 using Shared.DTOs.ModuleSemesterWeek;
 using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace StudyTimeManager.Repository
     public class ModuleSemesterWeekRepository : RepositoryBase<ModuleSemesterWeek>,
         IModuleSemesterWeekRepository
     {
-        public ModuleSemesterWeekRepository(RepositoryContext repositoryContext)
+        public ModuleSemesterWeekRepository(RepositoryContextFactory repositoryContext)
             : base(repositoryContext)
         {
         }
@@ -38,6 +39,11 @@ namespace StudyTimeManager.Repository
             m.ModuleId.Equals(moduleId), trackChanges)
                 .OrderBy(m => m.WeekNumber)
                 .ToList();
+        }
+
+        public void UpdateModuleSemesterWeeksForAModule(ModuleSemesterWeek moduleSemesterWeek)
+        {
+            Update(moduleSemesterWeek);
         }
     }
 }

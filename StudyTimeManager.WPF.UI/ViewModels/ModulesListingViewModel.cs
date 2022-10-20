@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Shared.DTOs.Semester;
+using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
     public partial class ModulesListingViewModel : ObservableObject
     {
         private readonly IServiceManager _service;
-
+        private SemesterDTO _semester;
         /// <summary>
         /// Observable collection of modules 
         /// </summary>
@@ -46,14 +48,23 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         {
             WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this, (r, message) =>
             {
+                //_service.ModuleService.GetModule(_semester.Id,message.Value.Id);
                 _modules.Add(new ModuleListingItemViewModel(message.Value));
             });
+
             WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this, (r, message) =>
             {
                 ModuleListingItemViewModel module = _modules
                     .First(m => m.Id.Equals(message.Value.Id));
-
                 _modules.Remove(module);
+            });
+            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, message) =>
+            {
+                _semester = message.Value;
+            });
+            WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, message) =>
+            {
+                _modules.Clear();
             });
         }
 

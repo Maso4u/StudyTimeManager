@@ -14,5 +14,6 @@ namespace StudyTimeManager.Repository
         public DbSet<Module>? Modules { get; set; }
         public DbSet<ModuleSemesterWeek>? ModuleSemesterWeeks { get; set; }
         public DbSet<StudySession>? StudySessions { get; set; }
+
     }
 }

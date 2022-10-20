@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Shared.DTOs.Module;
 using Shared.DTOs.ModuleSemesterWeek;
-using StudyTimeManager.Domain.Models;
+using Shared.DTOs.Semester;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Linq;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
@@ -41,6 +41,8 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         [ObservableProperty]
         private bool _canDelete;
 
+        private SemesterDTO semester;
+
         public ModuleSemesterWeekListingViewModel(IServiceManager service)
         {
             _service = service;
@@ -57,14 +59,15 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         private void DeleteModule()
         {
             //delete module the module
-            bool isDeleted = _service.ModuleService.DeleteModule(Module.ModuleCode);
+            bool isDeleted = _service.ModuleService.DeleteModule(semester.Id, Module.Id);
 
             if (isDeleted)
             {
                 //instantiate a new module with the values of the module with the properties 
                 //equal to the listing item viewmodel properties
-                Module module = new Module()
+                ModuleDTO module = new ModuleDTO()
                 {
+                    Id = Module.Id,
                     Code = Module.ModuleCode,
                     Name = Module.ModuleName,
                     NumberOfCredits = Module.NumberOfCredits,
@@ -72,8 +75,8 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     RequiredWeeklySelfStudyHours = Module.RequiredWeeklyStudyHours
                 };
                 //create and send a module deleted module message 
-                //ModuleDeletedMessage message = new ModuleDeletedMessage(module);
-                //WeakReferenceMessenger.Default.Send(message);
+                ModuleDeletedMessage message = new ModuleDeletedMessage(module);
+                WeakReferenceMessenger.Default.Send(message);
 
                 //clear the observable collection of module semester weeks
                 //set value to module semester listing item viewmodel to null
@@ -100,6 +103,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 //set can delete to true
                 //and get semester weeks for the module with a code equal to
                 //that of the module listing item viewmodel's code
+                CanDelete = false;
                 return;
             }
 
@@ -119,16 +123,30 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// </summary>
         private void RegisterToMessages()
         {
+            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, m) =>
+            {
+                semester = m.Value;
+            });
+
+
+            WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, message) =>
+            {
+                Module = null;
+                UpdateListing();
+                CanDelete = false;
+            });
+
             WeakReferenceMessenger.Default
-                .Register<SelectedModuleListingItemViewModelChangedMessage>(this, (r,message) =>
+                .Register<SelectedModuleListingItemViewModelChangedMessage>(this, (r, message) =>
                 {
                     //assign value of message to the module listing item viewmodel of this viewmodel
                     //and update listing of semester week for this module
                     Module = message.Value;
                     UpdateListing();
                 });
-            WeakReferenceMessenger.Default.Register<StudySessionCreatedMessage>(this, (r,message) =>
+            WeakReferenceMessenger.Default.Register<StudySessionCreatedMessage>(this, (r, message) =>
             {
+                //_service.ModuleSemesterWeekService.UpdateModuleSemesterWeekForAModule(message.Value);
                 if (Module is null)
                 {
                     return;

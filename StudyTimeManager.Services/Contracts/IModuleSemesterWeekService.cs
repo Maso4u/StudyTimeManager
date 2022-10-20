@@ -27,5 +27,6 @@ namespace StudyTimeManager.Services.Contracts
         /// </param>
         /// <returns>A collection of semester weeks</returns>
         IEnumerable<ModuleSemesterWeekDTO>? GetModuleSemesterWeeksForAModule(Guid ModuleId);
+        void UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek);
     }
 }

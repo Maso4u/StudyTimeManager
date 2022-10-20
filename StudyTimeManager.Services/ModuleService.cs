@@ -38,22 +38,43 @@ namespace StudyTimeManager.Services
             ///check if it was successfully added with the contains method,
             ///return the result of that check
             _repository.Module.CreateModuleForSemester(semester.Id, moduleEntity);
-            _repository.Save();
+            
+            return _mapper.Map<ModuleDTO>(moduleEntity);
+        }
+
+        public bool DeleteModule(Guid semesterId, Guid moduleId)
+        {
+            Semester? semester = _repository.Semester.GetSemester(semesterId, false);
+            if (semester == null) return false;
+
+            Module? semesterModule = _repository.Module.GetModuleById(semesterId,moduleId,false);
+            if (semesterModule == null) return false;
+
+            _repository.Module.DeleteModule(semesterModule);
+            return true;
+        }
+
+        public ModuleDTO? GetModule(Guid semesterId, Guid moduleId)
+        {
+            Module? moduleEntity = _repository
+                .Module.GetModuleById(semesterId, moduleId, false);
+            if (moduleEntity is null)
+            {
+                return null;
+            }
 
             return _mapper.Map<ModuleDTO>(moduleEntity);
         }
 
-        public bool DeleteModule(string moduleCode)
+        public ModuleDTO? GetModule(Guid semesterId, string moduleCode)
         {
-            ///find module with the code given through parameter in collection in semester and 
-            ///pass it into the Remove method of the semester's module collection as an argument.
-            return _semester.Modules.Remove(_semester[moduleCode]);
-        }
-
-        public ModuleDTO GetModule(Guid semesterId, string moduleCode)
-        {
-            Module moduleEntity = _repository
+            Module? moduleEntity = _repository
                 .Module.GetModuleByCode(semesterId, moduleCode, false);
+            if (moduleEntity is null)
+            {
+                return null;
+            }
+
             return _mapper.Map<ModuleDTO>(moduleEntity);
         }
 

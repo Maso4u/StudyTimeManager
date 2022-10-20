@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 
 namespace StudyTimeManager.WPF.UI.ViewModels 
@@ -98,7 +99,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             };
 
             //try and create a study session
-            StudySessionDTO studySessionDTO = _service.StudySessionService
+            StudySessionDTO? studySessionDTO = _service.StudySessionService
                 .CreateStudySession(SelectedModuleListingItemViewModel.Id, studySession);
             if (studySessionDTO is null)
             {
@@ -112,7 +113,10 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             StudySessionCreatedMessage message = new StudySessionCreatedMessage(SelectedModuleListingItemViewModel.Id);
             WeakReferenceMessenger.Default.Send(message);
 
-            MessageQueue.Enqueue("A new study session has been successfully added.", "UNDO",()=>UndoStudySession(studySessionDTO));
+            MessageQueue.Enqueue(
+                "A new study session has been successfully added.",
+                "UNDO",
+                ()=>UndoStudySession(studySessionDTO));
         }
 
         /// <summary>
@@ -146,8 +150,8 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 //add a new module listing item view model with the value of the message
                 //(a ModuleDTO) as it argument
                 _modules.Add(new ModuleListingItemViewModel(message.Value));
-
             });
+
             WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this, (r, message) =>
             {
                 RemoveModule(message.Value);
@@ -158,11 +162,20 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             });
             WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, message) =>
             {
+                semester = message.Value;
                 _semesterCreated = true;
                 CanCreate = _semesterCreated && _moduleCreated;
                 //assign values to semester start and end date
-                SemesterStartDate = message.Value.StartDate;
-                SemesterEndDate = message.Value.EndDate;
+                SemesterStartDate = semester.StartDate;
+                SemesterEndDate = semester.EndDate;
+            });
+
+            WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, m) =>
+            {
+                _semesterCreated = false;
+                _moduleCreated = false;
+                CanCreate = _semesterCreated && _moduleCreated;
+                semester = m.Value;
             });
         }
 

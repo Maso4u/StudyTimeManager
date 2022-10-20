@@ -29,7 +29,7 @@ namespace StudyTimeManager.Services.Contracts
         /// <see langword="true"/> if the module with the code was found and deleted successfully,
         /// <see langword="false"/> if otherwise.
         /// </returns>
-        bool DeleteModule(string moduleCode);
+        bool DeleteModule(Guid semesterId, Guid moduleId);
 
         /// <summary>
         /// Updates module with the same module code as one of the module code given as a parameter
@@ -44,6 +44,7 @@ namespace StudyTimeManager.Services.Contracts
         /// </summary>
         /// <param name="moduleCode">The module code for the <see cref="Module"/> to retrieve</param>
         /// <returns>A module with a code equal to <paramref name="moduleCode"/></returns>
+        ModuleDTO? GetModule(Guid semesterId, Guid moduleId);
         ModuleDTO? GetModule(Guid semesterId, string moduleCode);
 
         /// <summary>

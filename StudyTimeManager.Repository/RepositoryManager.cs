@@ -1,31 +1,32 @@
-﻿using StudyTimeManager.Repository.Contracts;
+﻿using StudyTimeManager.Repository.ContextFactory;
+using StudyTimeManager.Repository.Contracts;
 using System;
 
 namespace StudyTimeManager.Repository
 {
     public class RepositoryManager : IRepositoryManager
     {
-        private readonly RepositoryContext _repositoryContext;
+        private readonly RepositoryContextFactory _repositoryContextFactory;
         private readonly Lazy<SemesterRepository> _semesterRepository;
         private readonly Lazy<ModuleRepository> _moduleRepository;
         private readonly Lazy<ModuleSemesterWeekRepository> _moduleSemesterWeekRepository;
         private readonly Lazy<StudySessionRepository> _studySessionRepository;
 
-        public RepositoryManager(RepositoryContext repositoryContext)
+        public RepositoryManager(RepositoryContextFactory repositoryContextFactory)
         {
-            _repositoryContext = repositoryContext;
+            _repositoryContextFactory = repositoryContextFactory;
 
             _semesterRepository = new Lazy<SemesterRepository>(() =>
-            new SemesterRepository(repositoryContext));
+            new SemesterRepository(repositoryContextFactory));
 
             _moduleRepository = new Lazy<ModuleRepository>(() =>
-            new ModuleRepository(repositoryContext));
+            new ModuleRepository(repositoryContextFactory));
 
             _moduleSemesterWeekRepository = new Lazy<ModuleSemesterWeekRepository>(() =>
-            new ModuleSemesterWeekRepository(repositoryContext));
+            new ModuleSemesterWeekRepository(repositoryContextFactory));
 
             _studySessionRepository = new Lazy<StudySessionRepository>(() =>
-            new StudySessionRepository(repositoryContext));
+            new StudySessionRepository(repositoryContextFactory));
         }
 
         public ISemesterRepository Semester => _semesterRepository.Value;
@@ -36,9 +37,9 @@ namespace StudyTimeManager.Repository
 
         public IStudySessionRepository StudySession => _studySessionRepository.Value;
 
-        public void Save()
+        /*public void Save()
         {
-            _repositoryContext.SaveChanges();
-        }
+            _repositoryContextFactory.CreateDbContext().SaveChanges();
+        }*/
     }
 }

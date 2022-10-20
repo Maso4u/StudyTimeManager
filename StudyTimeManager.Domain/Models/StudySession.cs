@@ -29,5 +29,6 @@ namespace StudyTimeManager.Domain.Models
         [ForeignKey(nameof(ModuleSemesterWeek))]
         public Guid ModuleSemesterWeekId { get; set; }
         public ModuleSemesterWeek? ModuleSemesterWeek { get; set; }
+
     }
 }

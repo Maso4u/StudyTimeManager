@@ -8,6 +8,6 @@ namespace StudyTimeManager.Repository.Contracts
         IModuleRepository Module { get; }
         IModuleSemesterWeekRepository ModuleSemesterWeek { get;}
         IStudySessionRepository StudySession { get; }
-        void Save();
+        //void Save();
     }
 }

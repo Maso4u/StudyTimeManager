@@ -9,5 +9,6 @@ namespace StudyTimeManager.Repository.Contracts
         void CreateSemester(Semester semester);
         Semester GetSemester(Guid semesterId, bool trackChanges);
         IEnumerable<Semester> GetAllSemesters(bool trackChanges);
+        void DeleteSemester(Semester semester);
     }
 }

@@ -1,23 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using StudyTimeManager.Repository;
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.WPF.UI.ContextFactory
 {
-    public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryContext>
+    /*public class RepositoryContextFactory
     {
-        public RepositoryContext CreateDbContext(string[] args)
+         private readonly string _connectionString;
+
+        public RepositoryContextFactory(string connectionString)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var builder = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlite(configuration.GetConnectionString("sqlConnection"),
-                b=>b.MigrationsAssembly("StudyTimeManager.WPF.UI"));
-            return new RepositoryContext(builder.Options);
+            _connectionString = connectionString;
         }
-    }
+
+        public RepositoryContext CreateDbContext()
+        {
+            DbContextOptionsBuilder<RepositoryContext> options =
+                new DbContextOptionsBuilder<RepositoryContext>();
+            options.UseSqlite(_connectionString);
+            return new RepositoryContext(options.Options);
+        }
+    }*/
 }

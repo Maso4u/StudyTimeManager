@@ -1,15 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using StudyTimeManager.Domain.Models;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Input;
-using StudyTimeManager.Services.Contracts;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using StudyTimeManager.WPF.UI.Messages;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Configuration;
 using Shared.DTOs.Semester;
+using StudyTimeManager.Services.Contracts;
+using StudyTimeManager.WPF.UI.Messages;
+using System;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
@@ -38,6 +34,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         public bool CanCreate => _numberOfWeeks > 0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
 
         private readonly IServiceManager _service;
+        private SemesterDTO semesterDTO;
 
         /// <summary>
         /// Manages messages queued to be displayed by a snackbar
@@ -64,8 +61,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 NumberOfWeeks = NumberOfWeeks,
                 StartDate = StartDate
             };
-            SemesterDTO semesterDTO = _service.SemesterService.CreateSemester(semester);
-
+            semesterDTO = _service.SemesterService.CreateSemester(semester);
 
             //if semester has been successfully created
             //create and send a message containing the Id of the semester.
@@ -75,18 +71,27 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 SemesterCreatedMessage message = new SemesterCreatedMessage(semesterDTO);
                 WeakReferenceMessenger.Default.Send(message);
 
-                MessageQueue.Enqueue("Semester successfully created.", "UNDO", () => UndoCreate());
+                MessageQueue.Enqueue(
+                    "Semester successfully created.",
+                    "UNDO", 
+                    () => UndoCreate(semesterDTO));
             }
+        }
+
+        [RelayCommand]
+        private void DeleteSemester() 
+        {
+            UndoCreate(semesterDTO);
         }
 
         /// <summary>
         /// Reverts the creation of the semester
         /// </summary>
-        private void UndoCreate()
+        private void UndoCreate(SemesterDTO semester)
         {
-
-            //SemesterCreatedMessage message = new SemesterCreatedMessage(false);
-            //WeakReferenceMessenger.Default.Send(message);
+            _service.SemesterService.DeleteSemester(semester.Id);
+            SemesterDeletedMessage message = new SemesterDeletedMessage(semester);
+            WeakReferenceMessenger.Default.Send(message);
         }
     }
 }

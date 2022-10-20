@@ -106,7 +106,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         private void UndoCreate(ModuleDTO module)
         {
             //delete the module
-            bool isDeleted = _service.ModuleService.DeleteModule(ModuleCode);
+            bool isDeleted = _service.ModuleService.DeleteModule(semester.Id,module.Id);
 
             //if the module is successfully deleted then create
             //and send a message that deletion was successful
@@ -132,6 +132,11 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, m) =>
             {
                 CanCreate = true;
+                semester = m.Value;
+            });
+            WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, m) =>
+            {
+                CanCreate = false;
                 semester = m.Value;
             });
         }

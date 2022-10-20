@@ -21,5 +21,6 @@ namespace StudyTimeManager.Services.Contracts
         /// </summary>
         /// <returns>The semester is enrolled in</returns>
         SemesterDTO GetSemester(Guid Id, bool trackChanges);
+        void DeleteSemester(Guid Id);
     }
 }

@@ -49,7 +49,6 @@ namespace StudyTimeManager.Services
                 week++;
             }
             _repository.ModuleSemesterWeek.CreateModuleSemesterWeeks(moduleSemesterWeeks);
-            _repository.Save();
         }
 
         public IEnumerable<ModuleSemesterWeekDTO>? GetModuleSemesterWeeksForAModule(Guid moduleId)
@@ -63,5 +62,10 @@ namespace StudyTimeManager.Services
             return moduleSemesterWeeksDTO;
         }
 
+        public void UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek)
+        {
+            ModuleSemesterWeek moduleSemesterWeekToUpdate = _mapper.Map<ModuleSemesterWeek>(moduleSemesterWeek);
+            _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeekToUpdate);
+        }
     }
 }

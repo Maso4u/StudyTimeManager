@@ -1,12 +1,13 @@
 ﻿using Repository;
 using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 
 namespace StudyTimeManager.Repository
 {
     public class StudySessionRepository : RepositoryBase<StudySession>, IStudySessionRepository
     {
-        public StudySessionRepository(RepositoryContext repositoryContext)
+        public StudySessionRepository(RepositoryContextFactory repositoryContext)
             : base(repositoryContext)
         {
         }
@@ -19,6 +20,11 @@ namespace StudyTimeManager.Repository
         public void DeleteStudySession(StudySession studySession)
         {
             Delete(studySession);
+        }
+
+        public void UpdateStudySession(StudySession studySession)
+        {
+            Update(studySession);
         }
     }
 }

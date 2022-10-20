@@ -8,22 +8,22 @@
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="550" MinWidth="1200"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        FontFamily="{StaticResource MontserratRegular}">
+        FontFamily="{StaticResource MontserratRegular}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="92*"/>
         </Grid.ColumnDefinitions>
 
         <materialDesign:Snackbar
             MessageQueue="{Binding MessageQueue}"
             Panel.ZIndex="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"/>
+            Grid.Column="1"
+            Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="156,0,0,0"/>
 
-        <Grid Grid.Row="0"
-              HorizontalAlignment="Stretch">
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -44,13 +44,13 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
+
             <views:CreateStudySession
                 DataContext="{Binding CreateModuleStudySessionViewModel}"
                 Width="350"
                 HorizontalAlignment="Left"
                 Grid.Row="0"/>
-            
+
             <views:ModulesListingView
                 DataContext="{Binding ModulesListingViewModel}"
                 Grid.Row="1"/>
@@ -58,6 +58,6 @@
 
         <views:ModuleSemesterWeeksListingView
             DataContext="{Binding ModuleSemesterWeekListingViewModel}"
-            Grid.Column="3"/>
+            Grid.Column="2" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
