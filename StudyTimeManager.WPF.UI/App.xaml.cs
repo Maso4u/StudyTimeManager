@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.ContextFactory;
+using StudyTimeManager.WPF.UI.State.Authenticators;
 using StudyTimeManager.WPF.UI.ViewModels;
 using System.IO;
 using System.Windows;
@@ -50,12 +52,17 @@ namespace StudyTimeManager.WPF.UI
 
                     //services to be injected 
                     services.AddScoped<IServiceManager, ServiceManager>();
+                    services.AddScoped<IAuthenticator, Authenticator>();
+                    services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
                     //snackbar message queue to be injected
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
                     //ViewModels to be injected via constructors
                     services.AddSingleton<MainWindowViewModel>();
+                    services.AddSingleton<LoginViewModel>();
+                    services.AddSingleton<RegisterViewModel>();
+                    services.AddSingleton<DashboardViewModel>();
                     services.AddSingleton<CreateSemesterViewModel>();
                     services.AddSingleton<CreateModuleViewModel>();
                     services.AddSingleton<CreateModuleStudySessionViewModel>();
@@ -76,6 +83,9 @@ namespace StudyTimeManager.WPF.UI
             _host.Start();
             MigrateDatabase();
             //_host.Services.GetService<RepositoryContext>()?.Database.Migrate();
+           // IServiceManager? serviceManager = _host.Services.GetService<IServiceManager>();
+            //serviceManager?.AuthenticationService.Register("MASO","Password@1234", "Password@1234");
+            //serviceManager?.AuthenticationService.Login("MASO", "Password@1234");
 
             MainWindow = _host.Services.GetService<MainWindow>();
             MainWindow?.Show();

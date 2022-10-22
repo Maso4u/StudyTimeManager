@@ -5,6 +5,8 @@
     /// </summary>
     public interface IServiceManager
     {
+        IAuthenticationService AuthenticationService { get; }
+
         /// <summary>
         /// Gets the module service
         /// </summary>
@@ -24,5 +26,7 @@
         /// Gets the semester service
         /// </summary>
         ISemesterService SemesterService { get; }
+
+
     }
 }

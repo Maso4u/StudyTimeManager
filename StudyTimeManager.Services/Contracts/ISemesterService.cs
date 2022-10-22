@@ -14,7 +14,7 @@ namespace StudyTimeManager.Services.Contracts
         /// </summary>
         /// <param name="semester">Semester to be created</param>
         /// <returns><see langword="true"/> if semester is created successfully, <see langword="false"/> if otherwise </returns>
-        SemesterDTO CreateSemester(SemesterForCreationDTO semester);
+        SemesterDTO CreateSemester(Guid studentId, SemesterForCreationDTO semester);
 
         /// <summary>
         /// Retrieves the semester a student is in

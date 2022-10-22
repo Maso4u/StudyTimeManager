@@ -5,6 +5,7 @@ using MaterialDesignThemes.Wpf;
 using Shared.DTOs.Semester;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
+using StudyTimeManager.WPF.UI.State.Authenticators;
 using System;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
@@ -34,6 +35,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         public bool CanCreate => _numberOfWeeks > 0 && !string.IsNullOrWhiteSpace(_startDate.ToString());
 
         private readonly IServiceManager _service;
+        private readonly IAuthenticator _authenticator;
         private SemesterDTO semesterDTO;
 
         /// <summary>
@@ -42,11 +44,13 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         public ISnackbarMessageQueue MessageQueue { get; }
 
         public CreateSemesterViewModel(IServiceManager service,
-            ISnackbarMessageQueue messageQueue)
+            ISnackbarMessageQueue messageQueue,
+            IAuthenticator authenticator)
         {
             MessageQueue = messageQueue;
             _startDate = DateTime.Now;
             _service = service;
+            _authenticator = authenticator;
         }
 
         /// <summary>
@@ -61,7 +65,8 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 NumberOfWeeks = NumberOfWeeks,
                 StartDate = StartDate
             };
-            semesterDTO = _service.SemesterService.CreateSemester(semester);
+            semesterDTO = _service.SemesterService
+                .CreateSemester(_authenticator.CurrentUser.Id,semester);
 
             //if semester has been successfully created
             //create and send a message containing the Id of the semester.

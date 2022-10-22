@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="StudyTimeManager.WPF.UI.Views.RegisterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
+             xmlns:validators="clr-namespace:StudyTimeManager.WPF.UI.Validators"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Height="Auto"
+             Width="Auto"
+             Style="{StaticResource {x:Type UserControl}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!--Title-->
+        <TextBlock FontSize="30"
+                   Margin="35,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource {x:Type TextBlock}}"
+                   Opacity="0">
+            <Run Text="Study Time Manager"
+                 FontFamily="{StaticResource MontserratExtraLight}" />
+            <Run Text="Register"
+                 FontFamily="{StaticResource MontserratMedium}"
+                 Foreground="{StaticResource ButtonBackgroundBrush}" />
+        </TextBlock>
+        <!--Login UI-->
+        <Grid Grid.Row="1"
+              Width="400"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <!--username-->
+                <RowDefinition Height="100" />
+                <!--Password-->
+                <RowDefinition Height="100" />
+                <!--Confirm Password-->
+                <RowDefinition Height="100" />
+                <!--Button-->
+                <RowDefinition Height="90" />
+                <!--Message-->
+                <RowDefinition Height="90" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20*" />
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="Account"
+                                         VerticalAlignment="Center" />
+                <TextBox materialDesign:HintAssist.Hint="Username"
+                         VerticalAlignment="Center"
+                         materialDesign:TextFieldAssist.HasClearButton="True"
+                         Grid.Column="1"
+                         Text="{Binding Path=UserName, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+            <!--<TextBox.Text>
+                <Binding Path="Username"
+                            UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validators:NotEmptyValidationRuleValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>-->
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20*" />
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="FormTextboxPassword"
+                                         VerticalAlignment="Center" />
+                <PasswordBox Grid.Column="1"
+                             materialDesign:HintAssist.Hint="Password"
+                             materialDesign:TextFieldAssist.HasClearButton="True"
+                             VerticalAlignment="Center"
+                             PasswordChanged="pbxPassword_PasswordChanged"
+                             x:Name="pbxPassword"/>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20*" />
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="FormTextboxPassword"
+                                         VerticalAlignment="Center" />
+                <PasswordBox Grid.Column="1"
+                             materialDesign:HintAssist.Hint="Confirm Password"
+                             materialDesign:TextFieldAssist.HasClearButton="True"
+                             VerticalAlignment="Center" 
+                             PasswordChanged="pbxPassword_PasswordChanged"
+                             x:Name="pbxConfirmPassword"/>
+            </Grid>
+
+            <Button Grid.Row="3"
+                    HorizontalAlignment="Center"
+                    Height="50"
+                    Margin="10 5"
+                    materialDesign:ButtonAssist.CornerRadius="10"
+                    Background="{StaticResource ButtonBackgroundBrush}"
+                    BorderBrush="{x:Null}"
+                    Command="{Binding Path=RegisterCommand}"
+                    IsEnabled="{Binding Path=CanRegister}">
+                <Button.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Setter Property="Height"
+                                        Value="40" />
+                                <Setter Property="Width"
+                                        Value="40" />
+                            </Style>
+                        </Grid.Resources>
+                        <TextBlock Text="Register"
+                                   Grid.Column="0"
+                                   FontSize="20"
+                                   Margin="10 0"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                        <materialDesign:PackIcon Kind="ChevronRight"
+                                                 Grid.Column="1"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center" />
+                    </Grid>
+                </Button.Content>
+            </Button>
+
+            <TextBlock Grid.Row="4"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 0 25">
+                <Run Text="Have an account?"
+                     FontSize="12"
+                     Foreground="{DynamicResource MaterialDesignTextBoxBorder}" />
+                <Hyperlink FontSize="13"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}"
+                           TextDecorations="None"
+                           Command="{Binding Path=NavigateToLoginCommand}">
+                    Login
+                </Hyperlink>
+            </TextBlock>
+
+            <!--<materialDesign:Snackbar Grid.Row="4"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Bottom"
+                                     x:Name="SnackbarLogin">
+                <materialDesign:SnackbarMessage Content="Account created, want to login?"
+                                                ActionCommand="{Binding Path=NavigateLogin}"
+                                                IsEnabled="{Binding Path=AccountRegisterationOutcome}"/>
+            </materialDesign:Snackbar>-->
+        </Grid>
+    </Grid>
+</UserControl>

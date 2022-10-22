@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudyTimeManager.Domain.Models;
+using StudyTimeManager.Repository.Configuration;
 
 namespace StudyTimeManager.Repository
 {
@@ -10,6 +11,13 @@ namespace StudyTimeManager.Repository
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+        }
+
+        public DbSet<User>? Users { get; set; }
         public DbSet<Semester>? Semesters { get; set; }
         public DbSet<Module>? Modules { get; set; }
         public DbSet<ModuleSemesterWeek>? ModuleSemesterWeeks { get; set; }

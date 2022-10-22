@@ -1,29 +1,14 @@
-﻿<Window x:Class="StudyTimeManager.WPF.UI.MainWindow"
+﻿<UserControl x:Class="StudyTimeManager.WPF.UI.Views.DashboardView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:StudyTimeManager.WPF.UI" 
-        xmlns:viewmodels ="clr-namespace:StudyTimeManager.WPF.UI.ViewModels"
+        xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
         xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="560" MinWidth="1210"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        FontFamily="{StaticResource MontserratRegular}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-    <ContentControl Content="{Binding CurrentViewModel}">
-        <ContentControl.Resources>
-            <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
-                <views:LoginView/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
-                <views:DashboardView/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:RegisterViewModel}">
-                <views:RegisterView/>
-            </DataTemplate>
-        </ContentControl.Resources>
-    </ContentControl>
-    <!--<Grid Margin="10">
+        FontFamily="{StaticResource MontserratRegular}">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
@@ -73,5 +58,5 @@
         <views:ModuleSemesterWeeksListingView
             DataContext="{Binding ModuleSemesterWeekListingViewModel}"
             Grid.Column="2" Grid.ColumnSpan="2"/>
-    </Grid>-->
-</Window>
+    </Grid>
+</UserControl>

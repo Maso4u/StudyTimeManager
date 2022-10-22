@@ -40,6 +40,11 @@ namespace StudyTimeManager.Domain.Models
         /// </summary>
         public ICollection<Module>? Modules { get; set; }
 
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
+        public User? User { get; set; }
+
+
         /// <summary>
         /// Gets a <see cref="Module"/> in <see cref="Modules"/> with a code equal to <paramref name="moduleCode"/> 
         /// </summary>

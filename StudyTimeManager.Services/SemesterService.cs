@@ -23,7 +23,7 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public SemesterDTO CreateSemester(SemesterForCreationDTO semester)
+        public SemesterDTO CreateSemester(Guid studentId,SemesterForCreationDTO semester)
         {
             if (semester is null)
             {
@@ -43,7 +43,7 @@ namespace StudyTimeManager.Services
             }
 
             var semesterEntity = _mapper.Map<Semester>(semester);
-
+            semesterEntity.UserId = studentId;
             semesterEntity.EndDate = CalculateSemesterLastDay(semester.StartDate, semester.NumberOfWeeks);
             _repository.Semester.CreateSemester(semesterEntity);
             //_repository.Save();

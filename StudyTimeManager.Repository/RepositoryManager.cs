@@ -7,6 +7,7 @@ namespace StudyTimeManager.Repository
     public class RepositoryManager : IRepositoryManager
     {
         private readonly RepositoryContextFactory _repositoryContextFactory;
+        private readonly Lazy<UserRepository> _userRepository;
         private readonly Lazy<SemesterRepository> _semesterRepository;
         private readonly Lazy<ModuleRepository> _moduleRepository;
         private readonly Lazy<ModuleSemesterWeekRepository> _moduleSemesterWeekRepository;
@@ -15,6 +16,8 @@ namespace StudyTimeManager.Repository
         public RepositoryManager(RepositoryContextFactory repositoryContextFactory)
         {
             _repositoryContextFactory = repositoryContextFactory;
+            _userRepository = new Lazy<UserRepository>(()=>
+            new UserRepository(repositoryContextFactory));
 
             _semesterRepository = new Lazy<SemesterRepository>(() =>
             new SemesterRepository(repositoryContextFactory));
@@ -28,6 +31,8 @@ namespace StudyTimeManager.Repository
             _studySessionRepository = new Lazy<StudySessionRepository>(() =>
             new StudySessionRepository(repositoryContextFactory));
         }
+
+        public IUserRepository User => _userRepository.Value;
 
         public ISemesterRepository Semester => _semesterRepository.Value;
 

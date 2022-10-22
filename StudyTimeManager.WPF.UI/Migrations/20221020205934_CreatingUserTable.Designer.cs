@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyTimeManager.Repository;
 
 namespace StudyTimeManager.WPF.UI.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20221020205934_CreatingUserTable")]
+    partial class CreatingUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +142,7 @@ namespace StudyTimeManager.WPF.UI.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("UserId");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -151,14 +153,6 @@ namespace StudyTimeManager.WPF.UI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c1a3e84c-41cb-4054-8086-4c919d11a71b"),
-                            PasswordHash = "",
-                            Username = "tester"
-                        });
                 });
 
             modelBuilder.Entity("StudyTimeManager.Domain.Models.Module", b =>

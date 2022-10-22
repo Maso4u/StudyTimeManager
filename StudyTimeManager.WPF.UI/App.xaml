@@ -12,6 +12,47 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.LightBlue.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <!--page popup-->
+            <Style TargetType="UserControl">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="Margin"
+                                        SpeedRatio="5">
+                                <ThicknessAnimation>
+                                    <ThicknessAnimation.From>
+                                        <!--to slide from bottom to top-->
+                                        <Thickness Left="0"
+                                                   Top="0"
+                                                   Bottom="-750"
+                                                   Right="0" />
+                                    </ThicknessAnimation.From>
+                                    <ThicknessAnimation.To>
+                                        <!--to slide from bottom to top-->
+                                        <Thickness Left="0"
+                                                   Top="0"
+                                                   Bottom="0"
+                                                   Right="0" />
+                                    </ThicknessAnimation.To>
+                                </ThicknessAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="1">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 To="1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

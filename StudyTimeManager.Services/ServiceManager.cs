@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
 using System;
@@ -12,13 +13,17 @@ namespace StudyTimeManager.Services
         /// Leverages Lazy class to ensure lazy initialization of services.
         /// Meaning instances are only created when their accessed for the first time
         /// </summary>
+        private readonly Lazy<IAuthenticationService> _authenticationService;
         private readonly Lazy<IModuleService> _moduleService;
         private readonly Lazy<IModuleSemesterWeekService> _moduleSemesterWeekService;
         private readonly Lazy<IStudySessionService> _studySessionService;
         private readonly Lazy<ISemesterService> _semesterService;
+        
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IPasswordHasher passwordHasher)
         {
+            _authenticationService = new Lazy<IAuthenticationService>(
+                () => new AuthenticationService(repositoryManager, mapper,passwordHasher));
             _moduleService = new Lazy<IModuleService>(() => new ModuleService(repositoryManager, mapper));
             _moduleSemesterWeekService = new Lazy<IModuleSemesterWeekService>(() => new ModuleSemesterWeekService(repositoryManager, mapper));
             _studySessionService = new Lazy<IStudySessionService>(() => new StudySessionService(repositoryManager, mapper));
@@ -32,5 +37,7 @@ namespace StudyTimeManager.Services
 
         public IStudySessionService StudySessionService => _studySessionService.Value;
         public ISemesterService SemesterService => _semesterService.Value;
+
+        public IAuthenticationService AuthenticationService => _authenticationService.Value;
     }
 }

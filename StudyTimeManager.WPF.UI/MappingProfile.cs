@@ -3,6 +3,7 @@ using Shared.DTOs.Module;
 using Shared.DTOs.ModuleSemesterWeek;
 using Shared.DTOs.Semester;
 using Shared.DTOs.StudySession;
+using Shared.DTOs.User;
 using StudyTimeManager.Domain.Models;
 
 namespace StudyTimeManager.WPF.UI
@@ -11,6 +12,10 @@ namespace StudyTimeManager.WPF.UI
 	{
 		public MappingProfile()
 		{
+			//user maps
+			CreateMap<User, UserForRegisterationDTO>().ReverseMap();
+			CreateMap<User, UserDTO>().ReverseMap();
+
 			//semester maps
 			CreateMap<Semester, SemesterForCreationDTO>().ReverseMap();
 			CreateMap<Semester, SemesterDTO>().ReverseMap();
@@ -27,7 +32,8 @@ namespace StudyTimeManager.WPF.UI
 			//studySession 
 			CreateMap<StudySession, StudySessionDTO>().ReverseMap();
 			CreateMap<StudySession, StudySessionForCreationDTO>().ReverseMap();
-		
+			
+
 		}
 	} 
 
