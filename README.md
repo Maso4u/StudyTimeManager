@@ -1,6 +1,6 @@
 # StudyTimeManager
 
-A project with meant to assist students manage their time with the modules that they are doing in a semester. This project has WPF application built following MVVM architecture with the help of the Microsoft MVVM community toolkit and makes use of Entity Framework Core for the database connection. Further development will be made in the project to add an ASP.NET Web App.
+A project meant to assist students manage their time with the modules that they are doing in a semester. This project has WPF application built following MVVM architecture with the help of the Microsoft MVVM community toolkit and makes use of Entity Framework Core for the database connection. Further development will be made in the project to add an ASP.NET Web App.
 
 The project currently provides users with the following functionalities:
 - Create an account with a username and password (to be hashed in the database)
