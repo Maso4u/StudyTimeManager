@@ -22,6 +22,7 @@ namespace StudyTimeManager.WPF.UI.Views
         public DashboardView()
         {
             InitializeComponent();
+
         }
     }
 }

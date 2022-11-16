@@ -1,4 +1,5 @@
 ﻿using Shared.DTOs.User;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services.Contracts
 {
@@ -10,7 +11,7 @@ namespace StudyTimeManager.Services.Contracts
     }
     public interface IAuthenticationService
     {
-        RegisterationResult Register(string username, string password, string confirmPassword);
-        UserDTO? Login(string username, string password);
+        Task<RegisterationResult> Register(string username, string password, string confirmPassword);
+        Task<UserDTO?> Login(string username, string password);
     }
 }

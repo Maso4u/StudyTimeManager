@@ -1,11 +1,12 @@
 ﻿using StudyTimeManager.Domain.Models;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository.Contracts
 {
     public interface IStudySessionRepository
     {
-        void CreateStudySession(StudySession studySession);
-        void DeleteStudySession(StudySession studySession);
-        void UpdateStudySession(StudySession studySession);
+        Task CreateStudySession(StudySession studySession);
+        Task DeleteStudySession(StudySession studySession);
+        Task UpdateStudySession(StudySession studySession);
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -18,55 +19,55 @@ namespace Repository
             _repositoryContextFactory = repositoryContext;
         }
 
-        public void Create(T entity)
+        public async Task CreateAsync(T entity)
         {
             using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
             {
-                context.Set<T>().Add(entity);
-                context.SaveChanges();
+                await context.Set<T>().AddAsync(entity);
+                await context.SaveChangesAsync();
             }
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
             {
                 context.Set<T>().Remove(entity);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<T> FindAll(bool trackChanges)
+        public async Task<IEnumerable<T>> FindAllAsync(bool trackChanges)
         {
             using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
             {
                 if (trackChanges)
                 {
-                    return context.Set<T>().AsNoTracking().ToList();
+                    return await context.Set<T>().AsNoTracking().ToListAsync();
                 }
-                return context.Set<T>().ToList();
+                return await context.Set<T>().ToListAsync();
             }
         }
 
-        public IEnumerable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
+        public async Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression, bool trackChanges)
         {
             using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
             {
                 if (trackChanges)
                 {
-                    return context.Set<T>().Where(expression).ToList(); ;
+                    return await context.Set<T>().Where(expression).ToListAsync(); ;
                 }
-                var response =context.Set<T>().Where(expression).AsNoTracking();
-                return response.ToList();
+                var response = context.Set<T>().Where(expression).AsNoTracking();
+                return await response.ToListAsync();
             }
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             using (RepositoryContext context = _repositoryContextFactory.CreateDbContext())
             {
                 context.Set<T>().Update(entity);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
     }

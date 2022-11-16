@@ -4,7 +4,9 @@ using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository
 {
@@ -15,31 +17,38 @@ namespace StudyTimeManager.Repository
         {
         }
 
-        public void CreateModuleForSemester(Guid semesterId, Module module)
+        public async Task CreateModuleForSemester(Guid semesterId, Module module)
         {
             module.SemesterId = semesterId;
-            Create(module);
+            await CreateAsync(module);
         }
 
-        public void DeleteModule(Module module)
+        public async Task DeleteModule(Module module)
         {
-            Delete(module);
+            await DeleteAsync(module);
         }
 
-        public Module? GetModuleById(Guid semesterId,Guid moduleId,bool trackChanges)
+        public async Task<Module?> GetModuleById(Guid semesterId,Guid moduleId,bool trackChanges)
         {
-            return FindByCondition(m=>
-            m.SemesterId == semesterId && 
-            m.Id.Equals(moduleId), trackChanges)
-                .SingleOrDefault();
+            var result = await FindByConditionAsync(m=> m.SemesterId == semesterId && 
+            m.Id.Equals(moduleId), trackChanges);
+
+            return result.SingleOrDefault();
         }
 
-        public Module? GetModuleByCode(Guid semesterId, string moduleCode, bool trackChanges)
+        public async Task<Module?> GetModuleByCode(Guid semesterId, string moduleCode, bool trackChanges)
         {
-            return FindByCondition(m =>
+            var result = await FindByConditionAsync(m =>
             m.SemesterId == semesterId &&
-            m.Id.Equals(moduleCode), trackChanges)
-                .SingleOrDefault();
+            m.Id.Equals(moduleCode), trackChanges);
+
+            return result.SingleOrDefault();
+        }
+
+        public async Task<IEnumerable<Module>?> GetAllModules(Guid semesterId)
+        {
+            return await FindByConditionAsync(m =>
+            m.SemesterId.Equals(semesterId),false);
         }
     }
 }

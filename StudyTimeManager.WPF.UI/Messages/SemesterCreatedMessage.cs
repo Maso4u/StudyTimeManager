@@ -4,9 +4,9 @@ using System;
 
 namespace StudyTimeManager.WPF.UI.Messages
 {
-    public class SemesterCreatedMessage : ValueChangedMessage<SemesterDTO>
+    public class CurrentSemesterSetMessage : ValueChangedMessage<SemesterDTO>
     {
-        public SemesterCreatedMessage(SemesterDTO value) : base(value)
+        public CurrentSemesterSetMessage(SemesterDTO value) : base(value)
         {
         }
     }

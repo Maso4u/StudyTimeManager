@@ -10,6 +10,7 @@ using StudyTimeManager.WPF.UI.Messages;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
@@ -47,25 +48,26 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// Gets or Sets whether the module can be created or not.
         /// </summary>
         [ObservableProperty]
-        public bool _canCreate = false;
+        public bool _canCreate;
 
         private ModuleForCreationDTO module;
-        private SemesterDTO semester;
+        private SemesterDTO? semester;
 
         private readonly IServiceManager _service;
         public ISnackbarMessageQueue MessageQueue { get; }
+        public IAsyncRelayCommand CreateModuleCommand { get; }
         public CreateModuleViewModel(IServiceManager service, ISnackbarMessageQueue messageQueue)
         {
             _service = service;
             MessageQueue = messageQueue;
+            CreateModuleCommand= new AsyncRelayCommand(CreateModule);
             RegisterToMessages();
         }
 
         /// <summary>
         /// Command to creates a module
         /// </summary>
-        [RelayCommand]
-        private void CreateModule()
+        private async Task CreateModule()
         {
             //instantiate a new module with the values of the properties and try to create it 
             module = new ModuleForCreationDTO()
@@ -84,14 +86,14 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 return;
             }
 
-            ModuleDTO? moduleDTO = _service.ModuleService.CreateModule(semester, module, false);
+            ModuleDTO? moduleDTO = await _service.ModuleService.CreateModule(semester, module, false);
 
             //if the module was successfully created then create semester weeks for the module
             //and send message that it has been created. 
             //Add message to the message queue to notify users
-            if (moduleDTO != null)
+            if (moduleDTO is not null)
             {
-                _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(moduleDTO, semester);
+                await _service.ModuleSemesterWeekService.CreateModuleSemesterWeeks(moduleDTO, semester);
                 SendMessage(moduleDTO);
 
                 MessageQueue.Enqueue(
@@ -103,10 +105,10 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// <summary>
         /// Reverts the creation of a module
         /// </summary>
-        private void UndoCreate(ModuleDTO module)
+        private async Task UndoCreate(ModuleDTO? module)
         {
             //delete the module
-            bool isDeleted = _service.ModuleService.DeleteModule(semester.Id,module.Id);
+            bool isDeleted = await _service.ModuleService.DeleteModule(semester.Id,module.Id);
 
             //if the module is successfully deleted then create
             //and send a message that deletion was successful
@@ -129,15 +131,16 @@ namespace StudyTimeManager.WPF.UI.ViewModels
 
         private void RegisterToMessages()
         {
-            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<CurrentSemesterSetMessage>(this, (r, m) =>
             {
                 CanCreate = true;
                 semester = m.Value;
             });
+
             WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, m) =>
             {
                 CanCreate = false;
-                semester = m.Value;
+                semester = null;
             });
         }
     }

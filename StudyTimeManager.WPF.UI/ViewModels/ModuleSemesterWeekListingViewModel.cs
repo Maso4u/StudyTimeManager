@@ -8,7 +8,7 @@ using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
@@ -43,23 +43,25 @@ namespace StudyTimeManager.WPF.UI.ViewModels
 
         private SemesterDTO semester;
 
+        public IAsyncRelayCommand DeleteModuleCommand { get; set; }
+
         public ModuleSemesterWeekListingViewModel(IServiceManager service)
         {
             _service = service;
             _moduleSemesterWeekListingItems =
                 new ObservableCollection<ModuleSemesterWeekListingItemViewModel>();
             CanDelete = false;
+            DeleteModuleCommand = new AsyncRelayCommand(DeleteModule);
             RegisterToMessages();
         }
 
         /// <summary>
         /// Deletes the module currently being 
         /// </summary>
-        [RelayCommand]
-        private void DeleteModule()
+        private async Task DeleteModule()
         {
             //delete module the module
-            bool isDeleted = _service.ModuleService.DeleteModule(semester.Id, Module.Id);
+            bool isDeleted = await _service.ModuleService.DeleteModule(semester.Id, Module.Id);
 
             if (isDeleted)
             {
@@ -78,19 +80,15 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 ModuleDeletedMessage message = new ModuleDeletedMessage(module);
                 WeakReferenceMessenger.Default.Send(message);
 
-                //clear the observable collection of module semester weeks
-                //set value to module semester listing item viewmodel to null
-                //set value of can delete to false
-                _moduleSemesterWeekListingItems.Clear();
                 Module = null;
-                CanDelete = false;
+                UpdateListing();
             }
         }
 
         /// <summary>
         /// Updates the list of semester weeks for the module
         /// </summary>
-        private void UpdateListing()
+        private async Task UpdateListing()
         {
             //clear the current list of semester week items
             _moduleSemesterWeekListingItems.Clear();
@@ -108,8 +106,13 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             }
 
             CanDelete = true;
-            IEnumerable<ModuleSemesterWeekDTO>? semesterWeeks = _service.ModuleSemesterWeekService
+            IEnumerable<ModuleSemesterWeekDTO>? semesterWeeks = await _service.ModuleSemesterWeekService
                 .GetModuleSemesterWeeksForAModule(Module.Id);
+
+            if (semesterWeeks is null)
+            {
+                return;
+            }
 
             foreach (var semesterWeek in semesterWeeks)
             {
@@ -123,11 +126,10 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// </summary>
         private void RegisterToMessages()
         {
-            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<CurrentSemesterSetMessage>(this, (r, m) =>
             {
                 semester = m.Value;
             });
-
 
             WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, message) =>
             {
@@ -144,6 +146,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     Module = message.Value;
                     UpdateListing();
                 });
+
             WeakReferenceMessenger.Default.Register<StudySessionCreatedMessage>(this, (r, message) =>
             {
                 //_service.ModuleSemesterWeekService.UpdateModuleSemesterWeekForAModule(message.Value);
@@ -157,6 +160,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     UpdateListing();
                 }
             });
+
             WeakReferenceMessenger.Default.Register<StudySessionRemovedMessage>(this, (r, message) =>
             {
                 if (Module is null)
@@ -168,39 +172,6 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     UpdateListing();
                 }
             });
-        }
-
-        public void Receive(SelectedModuleListingItemViewModelChangedMessage message)
-        {
-            //assign value of message to the module listing item viewmodel of this viewmodel
-            //and update listing of semester week for this module
-            Module = message.Value;
-            UpdateListing();
-        }
-
-        public void Receive(StudySessionCreatedMessage message)
-        {
-            if (Module is null)
-            {
-                return;
-            }
-
-            if (Module.Id.Equals(message.Value))
-            {
-                UpdateListing();
-            }
-        }
-
-        public void Receive(StudySessionRemovedMessage message)
-        {
-            if (Module is null)
-            {
-                return;
-            }
-            if (Module.Id.Equals(message.Value))
-            {
-                UpdateListing();
-            }
         }
     }
 }

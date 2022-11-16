@@ -2,6 +2,7 @@
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository
 {
@@ -12,19 +13,19 @@ namespace StudyTimeManager.Repository
         {
         }
 
-        public void CreateStudySession(StudySession studySession)
+        public async Task CreateStudySession(StudySession studySession)
         {
-            Create(studySession);
+            await CreateAsync(studySession);
         }
 
-        public void DeleteStudySession(StudySession studySession)
+        public async Task DeleteStudySession(StudySession studySession)
         {
-            Delete(studySession);
+            await DeleteAsync(studySession);
         }
 
-        public void UpdateStudySession(StudySession studySession)
+        public async Task UpdateStudySession(StudySession studySession)
         {
-            Update(studySession);
+            await UpdateAsync(studySession);
         }
     }
 }

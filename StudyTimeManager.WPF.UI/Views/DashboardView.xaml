@@ -4,10 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
-        xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        FontFamily="{StaticResource MontserratRegular}">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodels="clr-namespace:StudyTimeManager.WPF.UI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SemesterViewModel}"
+             FontFamily="{StaticResource MontserratRegular}">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -27,12 +26,12 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <views:CreateSemesterView
-                DataContext="{Binding CreateSemesterViewModel}"
+            <local:SemesterView
+                DataContext="{Binding SemesterViewModel}"
                 Grid.Row="0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Stretch"/>
-            <views:CreateModuleView
+            <local:CreateModuleView
                 DataContext="{Binding CreateModuleViewModel}"
                 Grid.Row="1"
                 VerticalAlignment="Stretch"/>
@@ -44,18 +43,18 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <views:CreateStudySession
+            <local:CreateStudySession
                 DataContext="{Binding CreateModuleStudySessionViewModel}"
                 Width="350"
                 HorizontalAlignment="Left"
                 Grid.Row="0"/>
 
-            <views:ModulesListingView
+            <local:ModulesListingView
                 DataContext="{Binding ModulesListingViewModel}"
                 Grid.Row="1"/>
         </Grid>
 
-        <views:ModuleSemesterWeeksListingView
+        <local:ModuleSemesterWeeksListingView
             DataContext="{Binding ModuleSemesterWeekListingViewModel}"
             Grid.Column="2" Grid.ColumnSpan="2"/>
     </Grid>

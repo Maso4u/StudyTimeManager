@@ -3,6 +3,7 @@ using Shared.DTOs.ModuleSemesterWeek;
 using Shared.DTOs.Semester;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services.Contracts
 {
@@ -17,7 +18,7 @@ namespace StudyTimeManager.Services.Contracts
         /// <param name="moduleCode">
         /// The code of the module for which a semester week is being created.
         /// </param>
-        void CreateModuleSemesterWeeks(ModuleDTO module, SemesterDTO semester);
+        Task CreateModuleSemesterWeeks(ModuleDTO module, SemesterDTO semester);
 
         /// <summary>
         /// Retrieves a collection of semester weeks from a module with a code equal to <paramref name="moduleCode"/>
@@ -26,7 +27,7 @@ namespace StudyTimeManager.Services.Contracts
         /// The module code of the module for which a collection of semester weeks are being retrieved 
         /// </param>
         /// <returns>A collection of semester weeks</returns>
-        IEnumerable<ModuleSemesterWeekDTO>? GetModuleSemesterWeeksForAModule(Guid ModuleId);
-        void UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek);
+        Task<IEnumerable<ModuleSemesterWeekDTO>?> GetModuleSemesterWeeksForAModule(Guid ModuleId);
+        Task UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek);
     }
 }

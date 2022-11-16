@@ -4,6 +4,7 @@ using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository
 {
@@ -14,30 +15,31 @@ namespace StudyTimeManager.Repository
         {
         }
 
-        public void CreateUser(User user)
+        public async Task CreateUser(User user)
         {
-            Create(user);
+            await CreateAsync(user);
         }
 
-        public void DeleteUser(User user)
+        public async Task DeleteUser(User user)
         {
-            Delete(user);
+            await DeleteAsync(user);
         }
 
-        public User? GetUser(Guid id)
+        public async Task<User?> GetUser(Guid id)
         {
-            return FindByCondition(u => u.Id.Equals(id),false)
-                .SingleOrDefault();
+            var result = await FindByConditionAsync(u => u.Id.Equals(id), false);
+            return result.SingleOrDefault();
         }
 
-        public User? GetUser(string username)
+        public async Task<User?> GetUser(string username)
         {
-            return FindByCondition(u => u.Username.Equals(username), false).SingleOrDefault();
+            var result = await FindByConditionAsync(u => u.Username.Equals(username), false);
+            return result.SingleOrDefault();
         }
 
-        public void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
-            Update(user);
+            await UpdateAsync(user);
         }
     }
 }

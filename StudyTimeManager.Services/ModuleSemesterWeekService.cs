@@ -8,6 +8,7 @@ using StudyTimeManager.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -23,7 +24,7 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public void CreateModuleSemesterWeeks(ModuleDTO module, SemesterDTO semester)
+        public async Task CreateModuleSemesterWeeks(ModuleDTO module, SemesterDTO semester)
         {
             List<ModuleSemesterWeek> moduleSemesterWeeks = new List<ModuleSemesterWeek>();
             Calendar calendar = CultureInfo.InvariantCulture.Calendar;
@@ -48,12 +49,12 @@ namespace StudyTimeManager.Services
                 moduleSemesterWeeks.Add(moduleSemesterWeek);
                 week++;
             }
-            _repository.ModuleSemesterWeek.CreateModuleSemesterWeeks(moduleSemesterWeeks);
+            await _repository.ModuleSemesterWeek.CreateModuleSemesterWeeks(moduleSemesterWeeks);
         }
 
-        public IEnumerable<ModuleSemesterWeekDTO>? GetModuleSemesterWeeksForAModule(Guid moduleId)
+        public async Task<IEnumerable<ModuleSemesterWeekDTO>?> GetModuleSemesterWeeksForAModule(Guid moduleId)
         {
-            IEnumerable<ModuleSemesterWeek> moduleSemesterWeeks = _repository.ModuleSemesterWeek
+            IEnumerable<ModuleSemesterWeek> moduleSemesterWeeks = await _repository.ModuleSemesterWeek
                     .GetModuleSemesterWeeksForAModule(moduleId, false);
 
             IEnumerable<ModuleSemesterWeekDTO> moduleSemesterWeeksDTO = _mapper
@@ -62,10 +63,10 @@ namespace StudyTimeManager.Services
             return moduleSemesterWeeksDTO;
         }
 
-        public void UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek)
+        public async Task UpdateModuleSemesterWeekForAModule(ModuleSemesterWeekDTO moduleSemesterWeek)
         {
             ModuleSemesterWeek moduleSemesterWeekToUpdate = _mapper.Map<ModuleSemesterWeek>(moduleSemesterWeek);
-            _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeekToUpdate);
+            await _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeekToUpdate);
         }
     }
 }

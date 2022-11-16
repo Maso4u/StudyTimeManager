@@ -29,6 +29,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// Gets the message queue for the snackbar
         /// </summary>
         public ISnackbarMessageQueue MessageQueue { get; }
+        
         public IAuthenticator Authenticator { get; }
         /*
                 /// <summary>
@@ -83,11 +84,10 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             RegisterToNavigationMessage();
             DashboardViewModel = dashboardViewModel;
             LoginViewModel = loginViewModel;
+            RegisterViewModel = registerViewModel;
             MessageQueue = messageQueue;
             Authenticator = authenticator;
             CurrentViewModel = LoginViewModel;
-            Authenticator = authenticator;
-            RegisterViewModel = registerViewModel;
         }
 
         private void RegisterToNavigationMessage()

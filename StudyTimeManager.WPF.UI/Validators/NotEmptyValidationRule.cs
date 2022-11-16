@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace StudyTimeManager.WPF.UI.Validators
 {
-    internal class NotEmptyValidationRule : ValidationRule
+    public sealed class NotEmptyValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

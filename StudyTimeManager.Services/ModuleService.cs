@@ -7,6 +7,7 @@ using StudyTimeManager.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -24,7 +25,7 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public ModuleDTO? CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges)
+        public async Task<ModuleDTO?> CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges)
         {
             var moduleEntity = _mapper.Map<Module>(module);
 
@@ -37,26 +38,37 @@ namespace StudyTimeManager.Services
             ///Add module to collection of modules in semester and 
             ///check if it was successfully added with the contains method,
             ///return the result of that check
-            _repository.Module.CreateModuleForSemester(semester.Id, moduleEntity);
+            await _repository.Module.CreateModuleForSemester(semester.Id, moduleEntity);
             
             return _mapper.Map<ModuleDTO>(moduleEntity);
         }
 
-        public bool DeleteModule(Guid semesterId, Guid moduleId)
+        public async Task<bool> DeleteModule(Guid semesterId, Guid moduleId)
         {
-            Semester? semester = _repository.Semester.GetSemester(semesterId, false);
+            Semester? semester = await _repository.Semester.GetSemester(semesterId, false);
             if (semester == null) return false;
 
-            Module? semesterModule = _repository.Module.GetModuleById(semesterId,moduleId,false);
+            Module? semesterModule = await _repository.Module.GetModuleById(semesterId,moduleId,false);
             if (semesterModule == null) return false;
 
-            _repository.Module.DeleteModule(semesterModule);
+            await _repository.Module.DeleteModule(semesterModule);
             return true;
         }
 
-        public ModuleDTO? GetModule(Guid semesterId, Guid moduleId)
+        public async Task<ICollection<ModuleDTO>?> GetAllSemesterModules(Guid semesterId)
         {
-            Module? moduleEntity = _repository
+            var result =await _repository.Module.GetAllModules(semesterId);
+            ICollection<Module>? modules = result?.ToList();
+            if (modules is null)
+            {
+                return null;
+            }
+            return _mapper.Map<ICollection<ModuleDTO>>(modules);
+        }
+
+        public async Task<ModuleDTO?> GetModule(Guid semesterId, Guid moduleId)
+        {
+            Module? moduleEntity = await _repository
                 .Module.GetModuleById(semesterId, moduleId, false);
             if (moduleEntity is null)
             {
@@ -66,9 +78,9 @@ namespace StudyTimeManager.Services
             return _mapper.Map<ModuleDTO>(moduleEntity);
         }
 
-        public ModuleDTO? GetModule(Guid semesterId, string moduleCode)
+        public async Task<ModuleDTO?> GetModule(Guid semesterId, string moduleCode)
         {
-            Module? moduleEntity = _repository
+            Module? moduleEntity = await _repository
                 .Module.GetModuleByCode(semesterId, moduleCode, false);
             if (moduleEntity is null)
             {
@@ -76,16 +88,6 @@ namespace StudyTimeManager.Services
             }
 
             return _mapper.Map<ModuleDTO>(moduleEntity);
-        }
-
-        public ICollection<Module> GetModules() => _semester.Modules;
-
-        public void UpdateModule(Module module)
-        {
-            ///get the index of the module to update in the collection of semester modules and
-            ///assign module given through the parameter to the module in the index
-            int moduleIndex = _semester.Modules.ToList().IndexOf(module);
-            _semester.Modules.ToList()[moduleIndex] = module;
         }
 
         /// <summary>

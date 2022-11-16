@@ -1,0 +1,238 @@
+﻿<UserControl x:Class="StudyTimeManager.WPF.UI.Views.SemesterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StudyTimeManager.WPF.UI.Views"
+             xmlns:converters="clr-namespace:StudyTimeManager.WPF.UI.Converters"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             FontFamily="{StaticResource MontserratRegular}"
+             Background="White"
+             TextOptions.TextRenderingMode="ClearType">
+    <UserControl.Resources>
+        <converters:StringToIntConverter x:Key="StringToIntConverter"/>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+    </UserControl.Resources>
+
+    <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}"
+                            Padding="15"
+                            Margin="5"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            DataContext="{Binding}"
+                            RenderOptions.ClearTypeHint="Enabled"
+                            materialDesign:FlipperAssist.UniformCornerRadius="5"
+                            IsFlipped="{Binding Path=Data.UserHasSemester, Source={StaticResource proxy},UpdateSourceTrigger=PropertyChanged}">
+        <materialDesign:Flipper.FrontContent>
+
+            <Grid MinWidth="250">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Title-->
+                <TextBlock Grid.Row="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Text="Semester Information"
+                           FontSize="20"
+                           FontFamily="{StaticResource OpenSansSemiBold}"/>
+                <!--Inputs-->
+                <Grid Grid.Row="1"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DatePicker 
+                    SelectedDate="{Binding Path=Data.StartDate, Source={StaticResource proxy}, UpdateSourceTrigger=PropertyChanged}"
+                    materialDesign:ValidationAssist.HasError="True"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:HintAssist.Hint="Start Date"
+                    FlowDirection="LeftToRight"
+                    Padding="10"
+                    Margin="0 5 5 5"
+                    Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
+
+                    <TextBox
+                    materialDesign:ValidationAssist.HasError="True"
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    TextWrapping="NoWrap"
+                    Padding="10"
+                    Margin="5 5 0 5"
+                    materialDesign:HintAssist.Hint="Number of Weeks">
+                        <TextBox.Text>
+                            <Binding Path="Data.NumberOfWeeks" Source="{StaticResource proxy}" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.Converter>
+                                    <converters:StringToIntConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <!--Button-->
+                    <Button
+                        Command="{Binding Path=Data.CreateSemesterCommand, Source={StaticResource proxy}}"
+                        IsEnabled="{Binding Path=Data.CanCreate, Source={StaticResource proxy}, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="2"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Height="45"
+                        Margin="0 5"
+                        materialDesign:ButtonAssist.CornerRadius="5"
+                        Background="{StaticResource ButtonBackgroundBrush}"
+                        BorderBrush="{x:Null}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="materialDesign:PackIcon">
+                                        <Setter Property="Height"
+                                                Value="25" />
+                                        <Setter Property="Width"
+                                                Value="25" />
+                                    </Style>
+                                </Grid.Resources>
+                                <materialDesign:PackIcon Kind="ChevronRightCircle"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Stretch"
+                                                         HorizontalAlignment="Center" />
+
+                                <TextBlock Text="Create Semester"
+                                           Grid.Column="0"
+                                           Margin="10 0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" 
+                                           FontFamily="{StaticResource MontserratMedium}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+            </Grid>
+        </materialDesign:Flipper.FrontContent>
+        <materialDesign:Flipper.BackContent>
+
+            <StackPanel  MinWidth="250"
+                  MinHeight="170">
+                <!--Title-->
+                <TextBlock VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Text="Semester Information"
+                           FontSize="20"
+                           FontFamily="{StaticResource OpenSansSemiBold}"/>
+                <Grid Margin="0 10 "
+                    Grid.IsSharedSizeScope="True" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--Start Date-->
+                    <Grid Grid.Row="0"
+                      Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                            SharedSizeGroup="label"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                        Grid.Column="0"
+                        Text="Start date: "
+                        FontWeight="Medium"/>
+
+                        <TextBlock
+                        Grid.Column="1"
+                        Text="{Binding Path=StartDate}"/>
+                    </Grid>
+                    <Grid Grid.Row="1"
+                      Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                            SharedSizeGroup="label"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                        Grid.Column="0"
+                        Text="End date: "
+                        FontWeight="Medium"/>
+
+                        <TextBlock
+                        Grid.Column="1"
+                        Text="{Binding Path=EndDate}"/>
+                    </Grid>
+                    <Grid Grid.Row="2"
+                      Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                            SharedSizeGroup="label"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                        Grid.Column="0"
+                        Text="Number of weeks: "
+                        FontWeight="Medium"/>
+
+                        <TextBlock
+                        Grid.Column="1"
+                        Text="{Binding Path=NumberOfWeeks}"/>
+                    </Grid>
+                </Grid>
+
+                <Button Command="{Binding DeleteSemesterCommand}"
+                        Margin="0 23 0 5"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Height="45"
+                        materialDesign:ButtonAssist.CornerRadius="5"
+                        Background="{StaticResource DeleteButtonBackgroundBrush}"
+                        BorderBrush="{x:Null}">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="20*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Setter Property="Height"
+                                                Value="25" />
+                                    <Setter Property="Width"
+                                                Value="25" />
+                                </Style>
+                            </Grid.Resources>
+
+                            <TextBlock 
+                            Text="Delete"
+                            Grid.Column="0"
+                            Margin="10 0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center" 
+                            FontFamily="{StaticResource MontserratMedium}"/>
+
+                            <materialDesign:PackIcon Kind="Delete"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Stretch"
+                                                         HorizontalAlignment="Center" />
+                        </Grid>
+                    </Button.Content>
+                </Button>
+
+            </StackPanel>
+        </materialDesign:Flipper.BackContent>
+    </materialDesign:Flipper>
+</UserControl>

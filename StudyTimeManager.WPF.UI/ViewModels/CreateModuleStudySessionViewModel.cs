@@ -10,11 +10,10 @@ using StudyTimeManager.WPF.UI.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace StudyTimeManager.WPF.UI.ViewModels 
+namespace StudyTimeManager.WPF.UI.ViewModels
 {
     /// <summary>
     /// Abstraction of the view responsible for the creation of a module
@@ -63,16 +62,17 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         private DateTime _semesterEndDate;
 
 
-        private bool _semesterCreated = false;
-        private bool _moduleCreated = false;
+        private bool _semesterExists = false;
+        private bool _modulesExists = false;
 
         /// <summary>
         /// Gets the enumerable collection of module listing item viewmodels
         /// </summary>
         public IEnumerable<ModuleListingItemViewModel> Modules => _modules;
-        private SemesterDTO semester;
+        private SemesterDTO? semester;
         private readonly IServiceManager _service;
         public ISnackbarMessageQueue MessageQueue { get; }
+        public IAsyncRelayCommand AddStudySessionCommand { get; }
 
         public CreateModuleStudySessionViewModel(IServiceManager service,
             ISnackbarMessageQueue messageQueue)
@@ -80,16 +80,16 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             _service = service;
             MessageQueue = messageQueue;
             _modules = new ObservableCollection<ModuleListingItemViewModel>();
-            CanCreate = _semesterCreated && _moduleCreated;
+            CanCreate = _semesterExists && _modulesExists;
             SelectedDate = SemesterStartDate;
+            AddStudySessionCommand = new AsyncRelayCommand(AddStudySession);
             RegisterToMessages();
         }
 
         /// <summary>
         /// Command that creates a study session
         /// </summary>
-        [RelayCommand]
-        private void AddStudySession()
+        private async Task AddStudySession()
         {
             //instantiate a new study session
             StudySessionForCreationDTO studySession = new()
@@ -99,7 +99,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             };
 
             //try and create a study session
-            StudySessionDTO? studySessionDTO = _service.StudySessionService
+            StudySessionDTO? studySessionDTO = await _service.StudySessionService
                 .CreateStudySession(SelectedModuleListingItemViewModel.Id, studySession);
             if (studySessionDTO is null)
             {
@@ -110,13 +110,14 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 return;
             }
 
-            StudySessionCreatedMessage message = new StudySessionCreatedMessage(SelectedModuleListingItemViewModel.Id);
+            StudySessionCreatedMessage message =
+                new StudySessionCreatedMessage(SelectedModuleListingItemViewModel.Id);
             WeakReferenceMessenger.Default.Send(message);
 
             MessageQueue.Enqueue(
                 "A new study session has been successfully added.",
                 "UNDO",
-                ()=>UndoStudySession(studySessionDTO));
+                () => UndoStudySession(studySessionDTO));
         }
 
         /// <summary>
@@ -128,10 +129,10 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// <param name="week">
         /// The week number in the semester for which the study session was created on
         /// </param>
-        private void UndoStudySession(StudySessionDTO studySession)
+        private async Task UndoStudySession(StudySessionDTO studySession)
         {
             Guid moduleId = SelectedModuleListingItemViewModel.Id;
-            _service.StudySessionService.RemoveStudySession(moduleId, studySession);
+            await _service.StudySessionService.RemoveStudySession(moduleId, studySession);
 
             StudySessionRemovedMessage message = new(moduleId);
             WeakReferenceMessenger.Default.Send(message);
@@ -144,12 +145,23 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         {
             WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this, (r, message) =>
             {
-                SelectedDate = SemesterStartDate;
-                _moduleCreated = true;
-                CanCreate = _semesterCreated && _moduleCreated;
+                _modulesExists = true;
+                CanCreate = _semesterExists && _modulesExists;
                 //add a new module listing item view model with the value of the message
                 //(a ModuleDTO) as it argument
                 _modules.Add(new ModuleListingItemViewModel(message.Value));
+            });
+
+            WeakReferenceMessenger.Default.Register<SemesterModulesFoundMessage>(this, (r, message) =>
+            {
+                //SelectedDate = SemesterStartDate;
+                _modulesExists = true;
+                CanCreate = _semesterExists && _modulesExists;
+                foreach (var module in message.Value)
+                {
+                    _modules.Add(new ModuleListingItemViewModel(module));
+                }
+
             });
 
             WeakReferenceMessenger.Default.Register<ModuleDeletedMessage>(this, (r, message) =>
@@ -160,22 +172,24 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     CanCreate = false;
                 }
             });
-            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, message) =>
+            WeakReferenceMessenger.Default.Register<CurrentSemesterSetMessage>(this, (r, message) =>
             {
                 semester = message.Value;
-                _semesterCreated = true;
-                CanCreate = _semesterCreated && _moduleCreated;
+                _semesterExists = true;
+                CanCreate = _semesterExists && _modulesExists;
                 //assign values to semester start and end date
                 SemesterStartDate = semester.StartDate;
                 SemesterEndDate = semester.EndDate;
+                SelectedDate = SemesterStartDate;
             });
 
             WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, m) =>
             {
-                _semesterCreated = false;
-                _moduleCreated = false;
-                CanCreate = _semesterCreated && _moduleCreated;
-                semester = m.Value;
+                _semesterExists = false;
+                _modulesExists = false;
+                CanCreate = _semesterExists && _modulesExists;
+                semester = null;
+                _modules.Clear();
             });
         }
 
@@ -191,37 +205,13 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             //the module to be removed from observable collection
             ModuleListingItemViewModel? moduleListingFound = _modules
                 .FirstOrDefault(m => m.Id == module.Id);
+            if (moduleListingFound is null)
+            {
+                return;
+            }
             //remove the found module listing item view model from
             //the observable collection it was found in
             _modules.Remove(moduleListingFound);
-        }
-
-        public void Receive(ModuleDeletedMessage message)
-        {
-            RemoveModule(message.Value);
-            if (Modules.Count() <= 0)
-            {
-                CanCreate = false;
-            }
-        }
-
-        public void Receive(SemesterCreatedMessage message)
-        {
-            _semesterCreated = true;
-            CanCreate = _semesterCreated && _moduleCreated;
-            //assign values to semester start and end date
-            SemesterStartDate = message.Value.StartDate;
-            SemesterEndDate = message.Value.EndDate;
-        }
-
-        public void Receive(ModuleCreatedMessage message)
-        {
-            SelectedDate = SemesterStartDate;
-            _moduleCreated = true;
-            CanCreate = _semesterCreated && _moduleCreated;
-            //add a new module listing item view model with the value of the message
-            //(a ModuleDTO) as it argument
-            _modules.Add(new ModuleListingItemViewModel(message.Value));
         }
     }
 }

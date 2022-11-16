@@ -5,6 +5,7 @@ using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -23,7 +24,7 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public SemesterDTO CreateSemester(Guid studentId,SemesterForCreationDTO semester)
+        public async Task<SemesterDTO?> CreateSemester(Guid studentId,SemesterForCreationDTO semester)
         {
             if (semester is null)
             {
@@ -45,23 +46,31 @@ namespace StudyTimeManager.Services
             var semesterEntity = _mapper.Map<Semester>(semester);
             semesterEntity.UserId = studentId;
             semesterEntity.EndDate = CalculateSemesterLastDay(semester.StartDate, semester.NumberOfWeeks);
-            _repository.Semester.CreateSemester(semesterEntity);
-            //_repository.Save();
+            await _repository.Semester.CreateSemester(semesterEntity);
 
             var semesterToReturn = _mapper.Map<SemesterDTO>(semesterEntity);
 
             return semesterToReturn;
         }
 
-        public void DeleteSemester(Guid Id)
+        public async Task<bool> DeleteSemester(Guid Id)
         {
-            Semester semester = _repository.Semester.GetSemester(Id, false);
-            _repository.Semester.DeleteSemester(semester);
+            Semester? semester = await _repository.Semester.GetSemester(Id, false);
+            if (semester is null)
+            {
+                return false;
+            }
+            await _repository.Semester.DeleteSemester(semester);
+            return true;
         }
 
-        public SemesterDTO GetSemester(Guid Id, bool trackChanges)
+        public async Task<SemesterDTO?> GetSemester(Guid UserId, bool trackChanges)
         {
-            Semester semester = _repository.Semester.GetSemester(Id, trackChanges);
+            Semester? semester = await _repository.Semester.GetSemesterByUser(UserId, trackChanges);
+            if (semester is null)
+            {
+                return null;
+            }
             return _mapper.Map<SemesterDTO>(semester);
         }
 

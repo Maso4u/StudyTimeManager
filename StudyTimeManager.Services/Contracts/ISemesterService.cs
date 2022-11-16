@@ -1,5 +1,6 @@
 ﻿using Shared.DTOs.Semester;
 using System;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services.Contracts
 {
@@ -14,13 +15,13 @@ namespace StudyTimeManager.Services.Contracts
         /// </summary>
         /// <param name="semester">Semester to be created</param>
         /// <returns><see langword="true"/> if semester is created successfully, <see langword="false"/> if otherwise </returns>
-        SemesterDTO CreateSemester(Guid studentId, SemesterForCreationDTO semester);
+        Task<SemesterDTO> CreateSemester(Guid studentId, SemesterForCreationDTO semester);
 
         /// <summary>
         /// Retrieves the semester a student is in
         /// </summary>
         /// <returns>The semester is enrolled in</returns>
-        SemesterDTO GetSemester(Guid Id, bool trackChanges);
-        void DeleteSemester(Guid Id);
+        Task<SemesterDTO?> GetSemester(Guid Id, bool trackChanges);
+        Task<bool> DeleteSemester(Guid Id);
     }
 }

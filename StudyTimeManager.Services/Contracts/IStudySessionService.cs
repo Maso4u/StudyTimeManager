@@ -1,5 +1,6 @@
 ﻿using Shared.DTOs.StudySession;
 using System;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services.Contracts
 {
@@ -22,7 +23,7 @@ namespace StudyTimeManager.Services.Contracts
         /// </param>
         /// <param name="studySession">The study session to be created.</param>
         /// <returns></returns>
-        StudySessionDTO? CreateStudySession(Guid moduleId, StudySessionForCreationDTO studySession);
+        Task<StudySessionDTO?> CreateStudySession(Guid moduleId, StudySessionForCreationDTO studySession);
 
         /// <summary>
         /// Removes study session in module with a code equal to <paramref name="moduleCode"/>
@@ -39,6 +40,6 @@ namespace StudyTimeManager.Services.Contracts
         /// <returns>
         /// <see langword="true"/> if study session was successfully removed, 
         /// <see langword="false"/> if otherwise</returns>
-        void RemoveStudySession(Guid moduleId, StudySessionDTO studySession);
+        Task RemoveStudySession(Guid moduleId, StudySessionDTO studySession);
     }
 }

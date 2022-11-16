@@ -63,7 +63,7 @@ namespace StudyTimeManager.WPF.UI
                     services.AddSingleton<LoginViewModel>();
                     services.AddSingleton<RegisterViewModel>();
                     services.AddSingleton<DashboardViewModel>();
-                    services.AddSingleton<CreateSemesterViewModel>();
+                    services.AddSingleton<SemesterViewModel>();
                     services.AddSingleton<CreateModuleViewModel>();
                     services.AddSingleton<CreateModuleStudySessionViewModel>();
                     services.AddSingleton<ModulesListingViewModel>();
@@ -83,7 +83,7 @@ namespace StudyTimeManager.WPF.UI
             _host.Start();
             MigrateDatabase();
             //_host.Services.GetService<RepositoryContext>()?.Database.Migrate();
-           // IServiceManager? serviceManager = _host.Services.GetService<IServiceManager>();
+            //IServiceManager? serviceManager = _host.Services.GetService<IServiceManager>();
             //serviceManager?.AuthenticationService.Register("MASO","Password@1234", "Password@1234");
             //serviceManager?.AuthenticationService.Login("MASO", "Password@1234");
 

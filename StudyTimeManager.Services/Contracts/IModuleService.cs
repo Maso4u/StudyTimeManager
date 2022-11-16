@@ -3,6 +3,7 @@ using Shared.DTOs.Semester;
 using StudyTimeManager.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services.Contracts
 {
@@ -19,7 +20,7 @@ namespace StudyTimeManager.Services.Contracts
         /// <see langword="true"/> if module was successfully created,
         /// <see langword="false"/> if otherwise
         /// </returns>
-        ModuleDTO? CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges);
+        Task<ModuleDTO?> CreateModule(SemesterDTO semester, ModuleForCreationDTO module, bool trackChanges);
 
         /// <summary>
         /// Deletes a module from the collection of modules found in a semester
@@ -29,14 +30,14 @@ namespace StudyTimeManager.Services.Contracts
         /// <see langword="true"/> if the module with the code was found and deleted successfully,
         /// <see langword="false"/> if otherwise.
         /// </returns>
-        bool DeleteModule(Guid semesterId, Guid moduleId);
+        Task<bool> DeleteModule(Guid semesterId, Guid moduleId);
 
         /// <summary>
         /// Updates module with the same module code as one of the module code given as a parameter
         /// by assigning the values of the properties of the parameter module onto the found module
         /// </summary>
         /// <param name="module"></param>
-        void UpdateModule(Module module);
+        //Task UpdateModule(ModuleDTO module);
 
         /// <summary>
         /// Retrieves a module from the collection of modules found in a semester 
@@ -44,13 +45,13 @@ namespace StudyTimeManager.Services.Contracts
         /// </summary>
         /// <param name="moduleCode">The module code for the <see cref="Module"/> to retrieve</param>
         /// <returns>A module with a code equal to <paramref name="moduleCode"/></returns>
-        ModuleDTO? GetModule(Guid semesterId, Guid moduleId);
-        ModuleDTO? GetModule(Guid semesterId, string moduleCode);
+        Task<ModuleDTO?> GetModule(Guid semesterId, Guid moduleId);
+        Task<ModuleDTO?> GetModule(Guid semesterId, string moduleCode);
 
         /// <summary>
         /// Retrieves the collection of a semester
         /// </summary>
         /// <returns>A collection of the modules in a semester</returns>
-        ICollection<Module> GetModules();
+        Task<ICollection<ModuleDTO>?> GetAllSemesterModules(Guid semesterId);
     }
 }

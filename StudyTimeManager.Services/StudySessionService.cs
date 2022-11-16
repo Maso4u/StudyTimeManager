@@ -7,6 +7,7 @@ using StudyTimeManager.Services.Contracts;
 using System;
 using System.Data;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -21,10 +22,10 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public StudySessionDTO? 
+        public async Task<StudySessionDTO?> 
             CreateStudySession (Guid moduleId, StudySessionForCreationDTO studySession)
         {
-            ModuleSemesterWeek moduleSemesterWeek = _repository.ModuleSemesterWeek
+            ModuleSemesterWeek? moduleSemesterWeek = await _repository.ModuleSemesterWeek
                 .GetModuleSemesterWeekByDate(moduleId, studySession.Date, false);
 
             if (moduleSemesterWeek is null)
@@ -38,8 +39,8 @@ namespace StudyTimeManager.Services
 
                 StudySession studySessionEntity = _mapper.Map<StudySession>(studySession);
                 studySessionEntity.ModuleSemesterWeekId = moduleSemesterWeek.Id;
-                _repository.StudySession.CreateStudySession(studySessionEntity);
-                _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
+                await _repository.StudySession.CreateStudySession(studySessionEntity);
+                await _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
                 //_service.ModuleSemesterWeekService.UpdateModuleSemesterWeekForAModule(message.Value.Item2);
                 //_repository.Save();
 
@@ -49,9 +50,9 @@ namespace StudyTimeManager.Services
             return null;
         }
 
-        public void RemoveStudySession(Guid moduleId, StudySessionDTO studySessionDTO)
+        public async Task RemoveStudySession(Guid moduleId, StudySessionDTO studySessionDTO)
         {
-            ModuleSemesterWeek moduleSemesterWeek = _repository.ModuleSemesterWeek
+            ModuleSemesterWeek? moduleSemesterWeek = await _repository.ModuleSemesterWeek
                 .GetModuleSemesterWeekByDate(moduleId, studySessionDTO.Date, false);
 
             if (moduleSemesterWeek is null)
@@ -61,8 +62,8 @@ namespace StudyTimeManager.Services
 
             StudySession studySession = _mapper.Map<StudySession>(studySessionDTO);
             moduleSemesterWeek.RemainingSelfStudyHours += studySessionDTO.HoursSpent;
-            _repository.StudySession.DeleteStudySession(studySession);
-            _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
+            await _repository.StudySession.DeleteStudySession(studySession);
+            await _repository.ModuleSemesterWeek.UpdateModuleSemesterWeeksForAModule(moduleSemesterWeek);
         }
 
         /// <summary>

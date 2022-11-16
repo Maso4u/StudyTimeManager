@@ -4,6 +4,7 @@ using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
 using System;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -18,17 +19,17 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public UserDTO? CreateUser(UserForRegisterationDTO user)
+        public async Task<UserDTO?> CreateUser(UserForRegisterationDTO user)
         {
             User userEntity = _mapper.Map<User>(user);
             userEntity.PasswordHash = HashPassword(user.Password);
-            _repository.User.CreateUser(userEntity);
+            await _repository.User.CreateUser(userEntity);
             return _mapper.Map<UserDTO>(userEntity);
         }
 
-        public bool DeleteUser(Guid userId)
+        public async Task<bool> DeleteUser(Guid userId)
         {
-            User user = _repository.User.GetUser(userId);
+            User? user = await _repository.User.GetUser(userId);
             if (user is null)
             {
                 return false;
@@ -36,7 +37,7 @@ namespace StudyTimeManager.Services
 
             try
             {
-                _repository.User.DeleteUser(user);
+                await _repository.User.DeleteUser(user);
                 return true;
             }
             catch (Exception)
@@ -46,9 +47,9 @@ namespace StudyTimeManager.Services
 
         }
 
-        public UserDTO? GetUser(string username, string password)
+        public async Task<UserDTO?> GetUser(string username, string password)
         {
-            User? user = _repository.User.GetUser(username);
+            User? user = await _repository.User.GetUser(username);
             if (user is null)
             {
                 return null;
@@ -59,9 +60,9 @@ namespace StudyTimeManager.Services
             return _mapper.Map<UserDTO>(user);
         }
 
-        public UserDTO? UpdateUser(UserForRegisterationDTO user)
+        public Task<UserDTO?> UpdateUser(UserForRegisterationDTO user)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private string HashPassword(string password)

@@ -1,14 +1,15 @@
 ﻿using StudyTimeManager.Domain.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository.Contracts
 {
     public interface IUserRepository
     {
-        void CreateUser(User user);
-        User GetUser(Guid id);
-        User GetUser(string username);
-        void UpdateUser(User user);
-        void DeleteUser(User user);
+        Task CreateUser(User user);
+        Task<User?> GetUser(Guid id);
+        Task<User?> GetUser(string username);
+        Task UpdateUser(User user);
+        Task DeleteUser(User user);
     }
 }

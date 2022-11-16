@@ -6,6 +6,7 @@ using Shared.DTOs.User;
 using StudyTimeManager.Services.Contracts;
 using StudyTimeManager.WPF.UI.Messages;
 using StudyTimeManager.WPF.UI.State.Authenticators;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.WPF.UI.ViewModels
 {
@@ -29,15 +30,26 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// Gets the message queue for the snackbar
         /// </summary>
         public ISnackbarMessageQueue MessageQueue { get; }
+        public IAsyncRelayCommand RegisterCommand { get; }
 
         public RegisterViewModel(IAuthenticator authenticator, ISnackbarMessageQueue messageQueue)
         {
             _authenticator = authenticator;
             MessageQueue = messageQueue;
+            RegisterCommand = new AsyncRelayCommand(Register);
         }
-        [RelayCommand]
-        private void Register()
+
+        private async Task Register()
         {
+
+            if (string.IsNullOrEmpty(UserName) && 
+                string.IsNullOrEmpty(Password) && 
+                string.IsNullOrEmpty(ConfirmPassword))
+            {
+                MessageQueue.Enqueue("Please ensure that all fields are filled in");
+                return;
+            }
+
             UserForRegisterationDTO user = new UserForRegisterationDTO()
             { 
                 Username = UserName,
@@ -45,18 +57,20 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                 ConfirmPassword = ConfirmPassword
             };
 
-            RegisterationResult result = _authenticator.Register(user);
+            RegisterationResult result = await _authenticator.Register(user);
 
             switch (result)
             {
                 case RegisterationResult.Success:
-                    SuccessfulRegisteration();
+                    MessageQueue.Enqueue(
+                            "Successfully registered! Do you wish to login?",
+                            "LOGIN", () => NavigateToLogin());
                     break;
                 case RegisterationResult.PasswordsDoNotMatch:
-
+                    MessageQueue.Enqueue("Passwords entered do not match.");
                     break;
                 case RegisterationResult.UsernameAlreadyExists:
-                    UsernameTaken();
+                    MessageQueue.Enqueue($"Sorry. The username \"{UserName}\" is already taken.");
                     break;
             }
         }
@@ -66,20 +80,6 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         {
             ChangeViewModelMessage message = new ChangeViewModelMessage(ViewType.Login);
             WeakReferenceMessenger.Default.Send(message);
-        }
-
-        private void SuccessfulRegisteration()
-        {
-            MessageQueue.Enqueue(
-                            "Successfully registered! Do you wish to login?",
-                            "LOGIN",()=>NavigateToLogin());
-
-        }
-
-        private void UsernameTaken()
-        {
-            MessageQueue.Enqueue(
-                $"Sorry. The username \"{UserName}\" is already taken.");
         }
     }
 }

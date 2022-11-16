@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Shared.DTOs.Module;
 using Shared.DTOs.Semester;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Services.Contracts;
@@ -44,7 +45,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
             RegisterToMessages();
         }
 
-        public void RegisterToMessages()
+        public async void RegisterToMessages()
         {
             WeakReferenceMessenger.Default.Register<ModuleCreatedMessage>(this, (r, message) =>
             {
@@ -58,26 +59,31 @@ namespace StudyTimeManager.WPF.UI.ViewModels
                     .First(m => m.Id.Equals(message.Value.Id));
                 _modules.Remove(module);
             });
-            WeakReferenceMessenger.Default.Register<SemesterCreatedMessage>(this, (r, message) =>
+
+            WeakReferenceMessenger.Default.Register<CurrentSemesterSetMessage>(this, (r, message) =>
             {
                 _semester = message.Value;
+
+                IEnumerable<ModuleDTO>? semesteModules = _service.ModuleService
+                .GetAllSemesterModules(_semester.Id).Result;
+
+                if (semesteModules?.Count()<=0)
+                {
+                    return;
+                }
+
+                foreach (var module in semesteModules)
+                {
+                    _modules.Add(new ModuleListingItemViewModel(module));
+                }
+                SemesterModulesFoundMessage semesterModulesFound = new SemesterModulesFoundMessage(semesteModules);
+                WeakReferenceMessenger.Default.Send(semesterModulesFound);
             });
+
             WeakReferenceMessenger.Default.Register<SemesterDeletedMessage>(this, (r, message) =>
             {
                 _modules.Clear();
             });
-        }
-
-        public void Receive(ModuleCreatedMessage message)
-        {
-            _modules.Add(new ModuleListingItemViewModel(message.Value));
-        }
-        public void Receive(ModuleDeletedMessage message)
-        {
-            ModuleListingItemViewModel module = _modules
-                .First(m => m.Id.Equals(message.Value.Id));
-
-            _modules.Remove(module);
         }
 
         private void SendSelectionChangedMessage(ModuleListingItemViewModel? selectedModuleListingViewModel)

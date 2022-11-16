@@ -4,6 +4,7 @@ using Shared.DTOs.User;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services.Contracts;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Services
 {
@@ -22,9 +23,9 @@ namespace StudyTimeManager.Services
             _mapper = mapper;
         }
 
-        public UserDTO? Login(string username, string password)
+        public async Task<UserDTO?> Login(string username, string password)
         {
-            User userFound = _repositoryManager.User.GetUser(username);
+            User? userFound = await _repositoryManager.User.GetUser(username);
             if (userFound is null)
             {
                 ///TODO - Throw custom exception
@@ -42,7 +43,7 @@ namespace StudyTimeManager.Services
             return _mapper.Map<UserDTO>(userFound);
         }
 
-        public RegisterationResult Register(string username, string password, string confirmPassword)
+        public async Task<RegisterationResult> Register(string username, string password, string confirmPassword)
         {
 
             if (!password.Equals(confirmPassword))
@@ -50,7 +51,7 @@ namespace StudyTimeManager.Services
                 
                 return RegisterationResult.PasswordsDoNotMatch;
             }
-            User userFound = _repositoryManager.User.GetUser(username);
+            User? userFound = await _repositoryManager.User.GetUser(username);
 
             if (userFound is not null)
             {
@@ -62,7 +63,7 @@ namespace StudyTimeManager.Services
                 Username = username,
                 PasswordHash = hasher.HashPassword(password)
             };
-            _repositoryManager.User.CreateUser(user);
+            await _repositoryManager.User.CreateUser(user);
 
 
             return RegisterationResult.Success;

@@ -7,7 +7,7 @@
         xmlns:viewmodels ="clr-namespace:StudyTimeManager.WPF.UI.ViewModels"
         xmlns:views="clr-namespace:StudyTimeManager.WPF.UI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="560" MinWidth="1210"
+        Title="MainWindow" MinHeight="590" MinWidth="1220"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         FontFamily="{StaticResource MontserratRegular}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <ContentControl Content="{Binding CurrentViewModel}">
@@ -23,6 +23,7 @@
             </DataTemplate>
         </ContentControl.Resources>
     </ContentControl>
+    
     <!--<Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>

@@ -17,6 +17,13 @@
             <RowDefinition  Height="80" />
             <RowDefinition />
         </Grid.RowDefinitions>
+
+        <materialDesign:Snackbar
+            MessageQueue="{Binding MessageQueue}"
+            Panel.ZIndex="1"
+            Grid.Row="2"
+            HorizontalAlignment="Center"/>
+
         <!--Title-->
         <TextBlock FontSize="30"
                    Margin="35,0"
@@ -106,8 +113,7 @@
                     materialDesign:ButtonAssist.CornerRadius="10"
                     Background="{StaticResource ButtonBackgroundBrush}"
                     BorderBrush="{x:Null}"
-                    Command="{Binding Path=RegisterCommand}"
-                    IsEnabled="{Binding Path=CanRegister}">
+                    Command="{Binding Path=RegisterCommand}">
                 <Button.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -160,5 +166,6 @@
                                                 IsEnabled="{Binding Path=AccountRegisterationOutcome}"/>
             </materialDesign:Snackbar>-->
         </Grid>
+        
     </Grid>
 </UserControl>

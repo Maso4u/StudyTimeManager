@@ -1,5 +1,7 @@
 ﻿using Shared.DTOs.User;
 using StudyTimeManager.Services.Contracts;
+using System;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.WPF.UI.State.Authenticators
 {
@@ -7,8 +9,8 @@ namespace StudyTimeManager.WPF.UI.State.Authenticators
     {
         UserDTO CurrentUser { get; }
         bool IsLoggedIn { get; }
-
-        bool Login(UserForLoginDTO loginDTO);
-        RegisterationResult Register(UserForRegisterationDTO registerationDTO);
+        Task<bool> Login(UserForLoginDTO loginDTO);
+        Task<RegisterationResult> Register(UserForRegisterationDTO registerationDTO);
+        
     }
 }

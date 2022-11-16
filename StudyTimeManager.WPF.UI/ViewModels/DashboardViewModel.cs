@@ -8,7 +8,7 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         /// <summary>
         /// Gets or sets the create semester viewmodel
         /// </summary>
-        public CreateSemesterViewModel CreateSemesterViewModel { get; set; }
+        public SemesterViewModel SemesterViewModel { get; set; }
 
         /// <summary>
         /// Gets or sets the create module viewmodel
@@ -36,14 +36,14 @@ namespace StudyTimeManager.WPF.UI.ViewModels
         public ISnackbarMessageQueue MessageQueue { get; }
         public DashboardViewModel
         (
-            CreateSemesterViewModel createSemesterViewModel,
+            SemesterViewModel semesterViewModel,
             CreateModuleViewModel createModuleViewModel,
             CreateModuleStudySessionViewModel createModuleStudySessionViewModel,
             ModulesListingViewModel modulesListingViewModel,
             ModuleSemesterWeekListingViewModel moduleSemesterWeekListingViewModel,
             ISnackbarMessageQueue messageQueue)
         {
-            CreateSemesterViewModel = createSemesterViewModel;
+            SemesterViewModel = semesterViewModel;
             CreateModuleViewModel = createModuleViewModel;
             CreateModuleStudySessionViewModel = createModuleStudySessionViewModel;
             ModulesListingViewModel = modulesListingViewModel;

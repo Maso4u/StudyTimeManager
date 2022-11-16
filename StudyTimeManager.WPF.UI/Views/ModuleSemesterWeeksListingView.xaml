@@ -162,7 +162,7 @@
                         <TextBlock 
                             Text="Delete"
                             Grid.Column="0"
-                            Margin="10 0"
+                            Margin="4 0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center" 
                             FontFamily="{StaticResource MontserratMedium}"/>

@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Repository;
+﻿using Repository;
 using StudyTimeManager.Domain.Models;
 using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository
 {
@@ -16,27 +16,34 @@ namespace StudyTimeManager.Repository
         {
         }
 
-        public void CreateSemester(Semester semester)
+        public async Task CreateSemester(Semester semester)
         {
-            Create(semester);
+            await CreateAsync(semester);
         }
 
-        public void DeleteSemester(Semester semester)
+        public async Task DeleteSemester(Semester semester)
         {
-            Delete(semester);
+            await DeleteAsync(semester);
         }
 
-        public IEnumerable<Semester> GetAllSemesters(bool trackChanges)
+        public async Task<IEnumerable<Semester>> GetAllSemesters(bool trackChanges)
         {
-            return FindAll(trackChanges)
-                .OrderBy(s => s.StartDate)
-                .ToList();
+            var result = await FindAllAsync(trackChanges);
+            return result.OrderBy(s => s.StartDate).ToList();
         }
 
-        public Semester GetSemester(Guid semesterId, bool trackChanges)
+        public async Task<Semester?> GetSemester(Guid semesterId, bool trackChanges)
         {
-            return FindByCondition(e =>
-            e.Id.Equals(semesterId), trackChanges).SingleOrDefault();
+            var result = await FindByConditionAsync(e =>
+            e.Id.Equals(semesterId), trackChanges);
+            return result.SingleOrDefault();
+        }
+        
+        public async Task<Semester?> GetSemesterByUser(Guid userId, bool trackChanges)
+        {
+            var result = await FindByConditionAsync(s =>
+            s.UserId.Equals(userId), trackChanges);
+            return result.SingleOrDefault();
         }
     }
 }

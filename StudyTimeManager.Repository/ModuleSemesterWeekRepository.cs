@@ -7,6 +7,7 @@ using StudyTimeManager.Repository.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudyTimeManager.Repository
 {
@@ -18,32 +19,32 @@ namespace StudyTimeManager.Repository
         {
         }
 
-        public void CreateModuleSemesterWeeks(IEnumerable<ModuleSemesterWeek> moduleSemesterWeeks)
+        public async Task CreateModuleSemesterWeeks(IEnumerable<ModuleSemesterWeek> moduleSemesterWeeks)
         {
             foreach (var moduleSemesterWeek in moduleSemesterWeeks)
             {
-                Create(moduleSemesterWeek);
+                await CreateAsync(moduleSemesterWeek);
             }
         }
 
-        public ModuleSemesterWeek GetModuleSemesterWeekByDate(Guid moduleId, DateTime date, bool trackChanges)
+        public async Task<ModuleSemesterWeek?> GetModuleSemesterWeekByDate(Guid moduleId, DateTime date, bool trackChanges)
         {
-            return FindByCondition(m =>
-            m.ModuleId.Equals(moduleId) && date >= m.StartDate && date <= m.EndDate, trackChanges)
-                .SingleOrDefault();
+            var result = await FindByConditionAsync(m =>
+            m.ModuleId.Equals(moduleId) && date >= m.StartDate && date <= m.EndDate, trackChanges);
+            return result.SingleOrDefault();
         }
 
-        public IEnumerable<ModuleSemesterWeek> GetModuleSemesterWeeksForAModule(Guid moduleId, bool trackChanges)
+        public async Task<IEnumerable<ModuleSemesterWeek>> GetModuleSemesterWeeksForAModule(Guid moduleId, bool trackChanges)
         {
-            return FindByCondition(m =>
-            m.ModuleId.Equals(moduleId), trackChanges)
-                .OrderBy(m => m.WeekNumber)
+            var result = await FindByConditionAsync(m =>
+        m.ModuleId.Equals(moduleId), trackChanges);
+            return result.OrderBy(m => m.WeekNumber)
                 .ToList();
         }
 
-        public void UpdateModuleSemesterWeeksForAModule(ModuleSemesterWeek moduleSemesterWeek)
+        public async Task UpdateModuleSemesterWeeksForAModule(ModuleSemesterWeek moduleSemesterWeek)
         {
-            Update(moduleSemesterWeek);
+            await UpdateAsync(moduleSemesterWeek);
         }
     }
 }
