@@ -14,7 +14,7 @@ namespace StudyTimeManager.Repository.Configuration
                 {
                     Id = Guid.NewGuid(),
                     Username = "tester",
-                    PasswordHash = ""
+                    PasswordHash = "testing123"
                 });
         }
     }
