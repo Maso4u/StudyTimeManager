@@ -1,0 +1,50 @@
+﻿@page "/Forms/Account"
+@model StudyTimeManager.WebApp.UI.Pages.Forms.AccountModel
+@{
+}
+
+<div>
+    <h3>Study Time Manager <span id="lblHeadingText">Login</span></h3>
+
+    <form method="post" asp-page-handler="OnPostLogin">
+
+        <div>
+            <i class="bi bi-envelope"></i>
+            <input type="email" placeholder="username" asp-for="UserForLogin.Username" />
+        </div>
+        <div>
+            <input type="password" placeholder="password" asp-for="UserForLogin.Password" />
+        </div>
+
+        <button class="btn btn-primary"cla type="submit">Login</button>
+
+        <small>
+            Don't have an account? <a href="javascript:showRegisterForm()">register</a>
+        </small>
+    </form>
+
+    <form method="post" asp-page-handler="OnPostRegister">
+        <div>
+            <input type="email" placeholder="username" asp-for="UserForRegisteration.Username" />
+        </div>
+
+        <div>
+            <input type="password" placeholder="password" asp-for="UserForRegisteration.Password" />
+        </div>
+        
+        <div>
+            <input type="password" placeholder="confirm password" asp-for="UserForRegisteration.ConfirmPassword" />
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Register</button>
+
+        <small>
+            Already have an account? <a href="javascript:showLoginForm">login</a>
+        </small>
+        
+    </form>
+</div>
+
+@{
+    
+}

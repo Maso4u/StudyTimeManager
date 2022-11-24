@@ -1,0 +1,59 @@
+﻿@page
+@model StudyTimeManager.WebApp.UI.Pages.Forms.SemesterModulesModel
+
+@*semester*@
+<div>
+
+</div>
+
+@*modules*@
+<div>
+    @*add module*@
+    <div>
+        <form>
+            @*code*@
+            <div>
+                <input type="text" class="form-control" id="floatingInput"/>
+            </div>
+
+            @*name*@
+            <div>
+                <input type="text" class="form-control" id="floatingInput"/>
+            </div>
+
+            @*credits*@
+            <div>
+                <input type="number" class="form-control" id="floatingInput" min="1"/>
+            </div>
+
+            @*class hours*@
+            <div>
+                <input type="number" class="form-control" id="floatingInput" min="1" />
+            </div>
+
+            @*add*@
+            <div>
+                <button class="btn btn-primary">Add</button>
+            </div>
+        </form>
+    </div>
+
+    @*module listing*@
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@{
+}
