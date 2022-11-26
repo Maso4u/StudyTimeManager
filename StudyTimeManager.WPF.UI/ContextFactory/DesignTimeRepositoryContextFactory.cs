@@ -23,8 +23,7 @@ namespace StudyTimeManager.WPF.UI.ContextFactory
                         .Replace("[DataDirectory]", absolutePath);
 
             var builder = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlServer(connectionString,
-                b=>b.MigrationsAssembly("StudyTimeManager.WPF.UI"));
+                .UseSqlServer(connectionString);
 
             /*
                         var builder = new DbContextOptionsBuilder<RepositoryContext>()

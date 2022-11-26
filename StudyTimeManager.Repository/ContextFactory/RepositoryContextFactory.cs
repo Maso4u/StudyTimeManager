@@ -14,9 +14,7 @@ namespace StudyTimeManager.Repository.ContextFactory
         public RepositoryContext CreateDbContext()
         {
             DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlite(_connectionString,
-                b => b.MigrationsAssembly("StudyTimeManager.WPF.UI"))
-                .Options;
+                .UseSqlServer(_connectionString).Options;
 
             /*DbContextOptionsBuilder<RepositoryContext> options =
                 new DbContextOptionsBuilder<RepositoryContext>();*/

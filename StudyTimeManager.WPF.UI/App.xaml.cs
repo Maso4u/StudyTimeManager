@@ -9,9 +9,10 @@ using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
 using StudyTimeManager.Services;
 using StudyTimeManager.Services.Contracts;
-using StudyTimeManager.WPF.UI.ContextFactory;
 using StudyTimeManager.WPF.UI.State.Authenticators;
 using StudyTimeManager.WPF.UI.ViewModels;
+using System;
+using System.Configuration;
 using System.IO;
 using System.Windows;
 
@@ -23,6 +24,7 @@ namespace StudyTimeManager.WPF.UI
     public partial class App : Application
     {
         private readonly IHost _host;
+        public string ConnectionString { get; private set;}
         public App()
         {
             //configure dependency injection
@@ -40,10 +42,19 @@ namespace StudyTimeManager.WPF.UI
                 })
                 .ConfigureServices((context, services) =>
                 {
+                    string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                    string relativeDirectory = @"..\..\..\..\Database\";
+                    string absolutePath = Path.GetFullPath(Path.Combine(baseDirectory, relativeDirectory));
+
+                    //AppDomain.CurrentDomain.SetData("DataDirectory", absolutePath);
+
+                    ConnectionString = context.Configuration.GetConnectionString("sqlServerConnection")
+                        .Replace("[DataDirectory]", absolutePath);
+
                     //services.AddSingleton<IConfiguration>(AddConfiguration());
                     string connectionString = context.Configuration.GetConnectionString("sqlConnection");
-                    services.AddDbContext<RepositoryContext>(opt => opt.UseSqlite(connectionString));
-                    services.AddSingleton<RepositoryContextFactory>(new RepositoryContextFactory(connectionString));
+                    services.AddDbContext<RepositoryContext>(opt => opt.UseSqlServer(ConnectionString));
+                    services.AddSingleton(new RepositoryContextFactory(ConnectionString));
                     services.AddAutoMapper(typeof(MappingProfile));
                     services.AddSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
@@ -116,19 +127,20 @@ namespace StudyTimeManager.WPF.UI
 
         private void MigrateDatabase()
         {
-            IConfiguration configuration = _host.Services.GetService<IConfiguration>();
-            string? connectionString = configuration.GetConnectionString("sqlConnection");
-
             DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlite(connectionString,
+               .UseSqlServer(ConnectionString).Options;
+/*
+            DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
+                .UseSqlite(ConnectionString,
                 b => b.MigrationsAssembly("StudyTimeManager.WPF.UI"))
                 .Options;
 
-            /*using (RepositoryContext context = 
+            using (RepositoryContext context = 
                 _host.Services.GetService<RepositoryContext>())
             {
                 context.Database.Migrate();
-            }*/
+            }
+*/
             RepositoryContext repositoryContext = new RepositoryContext(options);
             repositoryContext.Database.Migrate();
         }

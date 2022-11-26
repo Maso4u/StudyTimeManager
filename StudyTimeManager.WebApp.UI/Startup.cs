@@ -48,10 +48,15 @@ namespace StudyTimeManager.WebApp.UI
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             services.AddRazorPages();
+            services.AddMvc().AddRazorPagesOptions(options =>
+            {
+                options.Conventions
+                .AddPageRoute("/Forms/SemesterModules", "");
+            });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Forms/Account";
+                    options.LoginPath = "/Account";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/Forbidden/";
@@ -97,13 +102,7 @@ namespace StudyTimeManager.WebApp.UI
         private void MigrateDatabase()
         {
             DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlServer(ConnectionString,
-                b => b.MigrationsAssembly("StudyTimeManager.WPF.UI")).Options;
-
-            /*DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
-                .UseSqlite(connectionString,
-                b => b.MigrationsAssembly("StudyTimeManager.WPF.UI"))
-                .Options;*/
+                .UseSqlServer(ConnectionString).Options;
 
             RepositoryContext repositoryContext = new RepositoryContext(options);
             repositoryContext.Database.Migrate();
