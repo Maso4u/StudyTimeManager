@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using StudyTimeManager.Repository;
 using StudyTimeManager.Repository.ContextFactory;
 using StudyTimeManager.Repository.Contracts;
@@ -34,11 +36,12 @@ namespace StudyTimeManager.WebApp.UI
         }
 
         public IConfiguration Configuration { get; }
-        public string ConnectionString { get;}
+        public string ConnectionString { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddDbContext<RepositoryContext>(opt => opt.UseSqlServer(ConnectionString));
             services.AddSingleton(new RepositoryContextFactory(ConnectionString));
             services.AddAutoMapper(typeof(MappingProfile));
@@ -52,7 +55,11 @@ namespace StudyTimeManager.WebApp.UI
             {
                 options.Conventions
                 .AddPageRoute("/Forms/SemesterModules", "");
-            });
+            }).SetCompatibilityVersion(CompatibilityVersion.Latest)
+            .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -61,6 +68,8 @@ namespace StudyTimeManager.WebApp.UI
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/Forbidden/";
                 });
+
+            //services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,15 +99,16 @@ namespace StudyTimeManager.WebApp.UI
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            //app.UseSession();
             app.UseCookiePolicy(cookiePolicyOptions);
+            app.UseAntiforgeryTokens();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapDefaultControllerRoute();
             });
         }
-                
+
         private void MigrateDatabase()
         {
             DbContextOptions options = new DbContextOptionsBuilder<RepositoryContext>()
