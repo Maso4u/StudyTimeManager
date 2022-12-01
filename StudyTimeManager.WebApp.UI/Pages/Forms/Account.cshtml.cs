@@ -27,7 +27,7 @@ namespace StudyTimeManager.WebApp.UI.Pages.Forms
         }
         public async Task OnPostRegisterAsync()
         {
-             RegisterationResult result = await _service.AuthenticationService.Register(UserForRegisteration.Username,
+             RegisterationResult result = await _services.AuthenticationService.Register(UserForRegisteration.Username,
                 UserForRegisteration.Password,
                 UserForRegisteration.ConfirmPassword);
 
@@ -43,7 +43,7 @@ namespace StudyTimeManager.WebApp.UI.Pages.Forms
         }
         public async Task<IActionResult> OnPostLoginAsync()
         {
-            UserDTO user = await _service.AuthenticationService
+            UserDTO? user = await _services.AuthenticationService
                 .Login(UserForLogin.Username, UserForLogin.Password);
 
             if (user == null)

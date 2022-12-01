@@ -2,11 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	  <nullable>enable</nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="Pages\Forms\SemesterModules.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Components\" />
@@ -24,20 +21,15 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Forms\Account.cshtml" />
-    <_ContentIncludedByDefault Remove="Pages\Forms\SemesterModules.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Pages\Forms\Account.cshtml" />
-    <None Include="Pages\Forms\SemesterModules.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Forms\SemesterModules.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">

@@ -9,15 +9,22 @@
 
     <form method="post">
 
-        <div>
-            <i class="bi bi-envelope"></i>
-            <input type="text" placeholder="username" asp-for="UserForLogin.Username" />
+        <div class="col-md-4 form-outline">
+            <input id="loginUsername"
+                   class="form-control" 
+                   type="text" 
+                   asp-for="UserForLogin.Username" />
+            <label for="loginUsername" class="form-label">Username</label>
+        </div>
+        <div  class="form-outline">
+            <input id="loginPassword"
+                   class="form-control" 
+                   type="password" 
+                   asp-for="UserForLogin.Password" />
+            <label for="loginPassword" class="form-label">Password</label>
         </div>
         <div>
-            <input type="password" placeholder="password" asp-for="UserForLogin.Password" />
-        </div>
-        <div>
-            <input class="btn btn-primary" cla type="submit" value="Login" asp-page-handler="Login" />
+            <input class="btn btn-primary" type="submit" value="Login" asp-page-handler="Login" />
         </div>
 
         <small>
@@ -26,16 +33,30 @@
     </form>
 
     <form method="post" >
-        <div>
-            <input type="text" placeholder="username" asp-for="UserForRegisteration.Username" />
+        <div  class="form-outline">
+            <input id="registerUsername"
+                   class="form-control"
+                   type="text"
+                   asp-for="UserForRegisteration.Username" />
+            <label for="registerUsername" class="form-label">Username</label>
         </div>
 
-        <div>
-            <input type="password" placeholder="password" asp-for="UserForRegisteration.Password" />
+        <div  class="form-outline">
+            <input id="registerPassword"
+                   class="form-control"
+                   type="password"
+                   asp-for="UserForRegisteration.Password" />
+
+            <label for="registerPassword" class="form-label">Password</label>
         </div>
         
-        <div>
-            <input type="password" placeholder="confirm password" asp-for="UserForRegisteration.ConfirmPassword" />
+        <div class="col-md-4 form-outline">
+            <input id="confirmPassword"
+                   class="form-control"
+                   type="password"
+                   asp-for="UserForRegisteration.ConfirmPassword" />
+
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
         </div>
         <div class="form-group">
             <input class="btn btn-primary" type="submit" value="Register" asp-page-handler="Register" />

@@ -1,57 +1,241 @@
 ﻿@page "/SemesterModules"
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @model StudyTimeManager.WebApp.UI.Pages.Forms.SemesterModulesModel
+
 @{
+    var afToken = Antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
 }
+<div class="d-grid gap-2">
 
-@*semester*@
-<div>
+    @*semester*@
+    <div>
+        <div id="createSemesterCard" class="card">
+            <div class="row g-3 card-body">
+
+                <div class="col-md-4 form-outline datepicker m-1">
+                    <input type="text"
+                           class="form-control"
+                           data-mdb-format="dd,mm,yyyy"
+                           id="semesterDateTimePicker"
+                           required>
+                    <label for="semesterDateTimePicker" class="form-label">Start Date</label>
+                </div>
+
+                <div class="col-md-4 form-outline m-1">
+                    <input type="number"
+                           class="form-control"
+                           id="semesterNumberOfWeeks"
+                           min="1"
+                           required>
+                    <label for="semesterNumberOfWeeks" class="form-label">Number of weeks</label>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-2 p-0 m-1">
+                    <button id="btnCreateSemester" class="btn btn-primary" disabled="disabled">
+                        Add Semester
+                        <span class="fas fa-chevron-circle-right"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="displaySemesterCard" class="card">
+            <div class="row g-3 card-body">
+                <div class="col-md-4 form-label">
+                    <label class="fw-bold">Start Date: </label>
+                    <span id="lblStartDate">@Model.UserSemester?.StartDate.ToShortDateString()</span>
+                </div>
+                <div class="col-md-4 form-label">
+                    <label class="fw-bold">Number of weeks: </label>
+                    <span id="lblNumberOfWeeks">@Model.UserSemester?.NumberOfWeeks</span>
+                </div>
+                <div class="col-md-2 p-0 m-2">
+                    <button id="btnDeleteSemester" class="btn btn-danger">
+                        <span class="fas fa-trash"></span>
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @*modules*@
+    <div class="d-grid gap-2">
+        <div class="card">
+            @*add module*@
+            <div class="row card-body">
+                @*code*@
+                <div class="col-md-5 form-outline m-1">
+                    <input type="text"
+                           class="form-control"
+                           id="moduleCodeInput" required />
+                    <label for="moduleCodeInput" class="form-label">Code</label>
+                </div>
+
+                @*name*@
+                <div class="col-md-5 form-outline m-1">
+                    <input type="text"
+                           class="form-control"
+                           id="moduleNameInput"
+                           required />
+                    <label for="moduleNameInput" class="form-label">Name</label>
+                </div>
+
+                @*credits*@
+                <div class="col-md-5 form-outline m-1">
+                    <input type="number" class="form-control" id="moduleCreditsInput" value="1" min="1" required />
+                    <label for="moduleCreditInput" class="form-label">Credits</label>
+                </div>
+
+                @*class hours*@
+                <div class="col-md-5 form-outline m-1">
+                    <input type="number" class="form-control" id="moduleClassHoursInput" value="1" min="1" required />
+                    <label for="moduleClassHoursInput" class="form-label">Class hours per week</label>
+                </div>
+
+                @*add*@
+                <div class="p-0 m-1">
+                    <button class="btn btn-primary" id="btnAddModule">Add Module</button>
+                </div>
+            </div>
+        </div>
+
+        @*module listing*@
+        <div class="datatable">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                        <th class="th-sm" data-mdb-sort="true">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-@*modules*@
-<div>
-    @*add module*@
-    <div>
-        <form>
-            @*code*@
-            <div>
-                <input type="text" class="form-control" id="floatingInput" />
-            </div>
+@section Scripts{
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+            let dateReg = new RegExp("^(0?[1-9]|[12][0-9]|3[01])[\\/\\-](0?[1-9]|1[012])[\\/\\-]\\d{4}$");
+            let numberReg = new RegExp("^[1-9][0-9]*$");
+            let whiteSpaceReg = new RegExp("\\s");
 
-            @*name*@
-            <div>
-                <input type="text" class="form-control" id="floatingInput" />
-            </div>
+            $("#semesterDateTimePicker").parent().on("input dateChange.mdb.datepicker", validateSemester);
+            $("#semesterNumberOfWeeks").on("input", validateSemester);
 
-            @*credits*@
-            <div>
-                <input type="number" class="form-control" id="floatingInput" min="1" />
-            </div>
+            updateSemesterDisplay(@Model.UserHasSemester.ToString().ToLower());
 
-            @*class hours*@
-            <div>
-                <input type="number" class="form-control" id="floatingInput" min="1" />
-            </div>
+            $("#btnCreateSemester").click(function () {
+                if(validateSemester()){
+                    $.ajax({
+                        type: "POST",
+                        url: "?handler=CreateSemester",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN", "@afToken")
+                        },
+                        data: {
+                            startDate: $("#semesterDateTimePicker").val(),
+                            numberOfWeeks: $("#semesterNumberOfWeeks").val()
+                        },
+                        success: function (result) {
+                            if (result != null) {
+                                getSemester();
+                                updateSemesterDisplay(true);
+                            }
+                        },
+                        error: function (req, status, error) {
+                            console.log(error);
+                            console.log(status);
+                        }
+                    });
+                }
+                
+            });
 
-            @*add*@
-            <div>
-                <button class="btn btn-primary">Add</button>
-            </div>
-        </form>
-    </div>
+            $("#btnDeleteSemester").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "?handler=DeleteSemester",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN", "@afToken")
+                    },
+                    data: {
+                        semesterId: "@Model.UserSemester?.Id"
+                    },
+                    success: function (result) {
+                        updateSemesterDisplay(result);
+                    },
+                    error: function (req, status, error) {
+                        console.log(error);
+                        console.log(status);
+                    }
+                });
+            });
 
-    @*module listing*@
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+            function updateSemesterDisplay(hasSemester) {
+                if (hasSemester === true) {
+                    $('#lblStartDate').text("@Model.UserSemester?.StartDate.ToShortDateString()").show();
+                    $('#lblNumberOfWeeks').text("@Model.UserSemester?.NumberOfWeeks").show();
+                    $('#createSemesterCard').hide();
+                    $('#displaySemesterCard').show();
+                } else {
+                    $('#lblStartDate').hide();
+                    $('#lblNumberOfWeeks').hide();
+                    $('#createSemesterCard').show();
+                    $('#displaySemesterCard').hide();
+                }
+            }
+
+            function getSemester() {
+
+                $.ajax({
+                    type: "GET",
+                    url: "?handler=Semester",
+                    success: function (result) {
+                        if(result!=null){
+
+                        }
+                    },
+                    error: function (req, status, error) {
+                        console.log(error);
+                        console.log(status);
+                    }
+                });
+            }
+        });
+
+        function validateSemester() {
+            let numberOfWeeks = $('#semesterNumberOfWeeks').val();
+            
+            var dateValid = dateReg.test($('#semesterDateTimePicker').val())
+            let isValidNum = numberReg.test(numberOfWeeks) && !whiteSpaceReg.test(numberOfWeeks);
+
+            console.log(numberOfWeeks+ " is number?? "+ numberReg.test(numberOfWeeks))
+            console.log(numberOfWeeks+ " has no white-space?? "+!whiteSpaceReg.test(numberOfWeeks))
+
+            console.log(isValidNum)
+            console.log(dateValid && isValidNum);
+
+            if (dateValid && isValidNum) {
+                if (!(parseInt(numberOfWeeks) <= 0)) {
+                    $('#btnCreateSemester').removeAttr("disabled")
+                } else {
+                    $("#btnCreateSemester").attr("disabled", "disabled");
+                }
+            } else {
+                $("#btnCreateSemester").attr("disabled", "disabled");
+            }
+            
+        }
+    </script>
+}
