@@ -33,7 +33,7 @@ namespace StudyTimeManager.Repository
             var result = await FindByConditionAsync(m=> m.SemesterId == semesterId && 
             m.Id.Equals(moduleId), trackChanges);
 
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public async Task<Module?> GetModuleByCode(Guid semesterId, string moduleCode, bool trackChanges)
@@ -42,7 +42,7 @@ namespace StudyTimeManager.Repository
             m.SemesterId == semesterId &&
             m.Id.Equals(moduleCode), trackChanges);
 
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public async Task<IEnumerable<Module>?> GetAllModules(Guid semesterId)

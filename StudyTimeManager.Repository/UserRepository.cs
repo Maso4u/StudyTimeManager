@@ -28,13 +28,13 @@ namespace StudyTimeManager.Repository
         public async Task<User?> GetUser(Guid id)
         {
             var result = await FindByConditionAsync(u => u.Id.Equals(id), false);
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public async Task<User?> GetUser(string username)
         {
             var result = await FindByConditionAsync(u => u.Username.Equals(username), false);
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public async Task UpdateUser(User user)

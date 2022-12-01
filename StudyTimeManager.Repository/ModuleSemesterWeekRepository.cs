@@ -31,7 +31,7 @@ namespace StudyTimeManager.Repository
         {
             var result = await FindByConditionAsync(m =>
             m.ModuleId.Equals(moduleId) && date >= m.StartDate && date <= m.EndDate, trackChanges);
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public async Task<IEnumerable<ModuleSemesterWeek>> GetModuleSemesterWeeksForAModule(Guid moduleId, bool trackChanges)

@@ -36,14 +36,14 @@ namespace StudyTimeManager.Repository
         {
             var result = await FindByConditionAsync(e =>
             e.Id.Equals(semesterId), trackChanges);
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
         
         public async Task<Semester?> GetSemesterByUser(Guid userId, bool trackChanges)
         {
             var result = await FindByConditionAsync(s =>
             s.UserId.Equals(userId), trackChanges);
-            return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
     }
 }
